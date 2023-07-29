@@ -34,12 +34,17 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var identityResultat = await _userManager.CreateAsync(new()
             {
                 UserName = anfrage.BenutzerName,
                 PhoneNumber = anfrage.Telefonnummer,
                 Email = anfrage.Email
-            }, anfrage.PasswortBestätigen ?? "");
+            }, anfrage.PasswortBestätigen ?? "");           
 
             if(identityResultat.Succeeded)
             {

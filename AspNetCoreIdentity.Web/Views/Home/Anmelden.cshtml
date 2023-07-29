@@ -11,35 +11,45 @@
                 @TempData["ErfolgsNachricht"]
             </div>
         }
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+
+        </div>
+
         <form asp-controller="Home" asp-action="Anmelden" method="post">
             <div class="row mb-3">
                 <label for="BenutzerName" class="col-md-4 col-form-label" asp-for="BenutzerName"></label>
                 <div class="col-md-8">
                     <input asp-for="BenutzerName" class="form-control">
+                    <span asp-validation-for="BenutzerName" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="Email" class="col-md-4 col-form-label" asp-for="Email"></label>
                 <div class="col-md-8">
                     <input asp-for="Email" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="Telefonnummer" class="col-md-4 col-form-label" asp-for="Telefonnummer"></label>
                 <div class="col-md-8">
                     <input asp-for="Telefonnummer" class="form-control">
+                    <span asp-validation-for="Telefonnummer" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="Passwort" class="col-md-4 col-form-label" asp-for="Passwort"></label>
                 <div class="col-md-8">
                     <input asp-for="Passwort" class="form-control">
+                    <span asp-validation-for="Passwort" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="PasswortBestätigen" class="col-md-4 col-form-label" asp-for="PasswortBestätigen"></label>
                 <div class="col-md-8">
                     <input asp-for="PasswortBestätigen" class="form-control">
+                    <span asp-validation-for="PasswortBestätigen" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
