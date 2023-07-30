@@ -3,5 +3,25 @@
     ViewData["Title"] = "BenutzerListe";
 }
 @model List<BenutzerAnsichtModell>
-<h1>BenutzerListe</h1>
+<h1>Mitgliederliste</h1>
 
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Benutzername</th>
+            <th scope="col">Benutzer-email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>               
+                <td>@item.BenutzerID</td>
+                <td>@item.BenutzerName</td>
+                <td>@item.BenutzerEmail</td>
+            </tr>
+        }
+        
+    </tbody>
+</table>
