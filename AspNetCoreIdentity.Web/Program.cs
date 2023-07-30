@@ -1,4 +1,7 @@
+using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,8 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlVerbindung"));
 });
+
+builder.Services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
 
 builder.Services.AddIdentity<AppBenutzer,AppRolle>().AddEntityFrameworkStores<AppDbKontext>();
 
