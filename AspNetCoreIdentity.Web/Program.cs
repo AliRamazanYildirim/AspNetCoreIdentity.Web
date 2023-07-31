@@ -3,6 +3,7 @@ using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 });
 
 builder.Services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
 
 builder.Services.AddIdentityMitErweiterung();
 

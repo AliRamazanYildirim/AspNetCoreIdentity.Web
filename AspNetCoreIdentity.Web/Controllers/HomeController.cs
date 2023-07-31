@@ -1,4 +1,5 @@
 ﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,13 @@ namespace AspNetCoreIdentity.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<AppBenutzer> _userManager;
+        private readonly BenutzerValidator _validation;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation)
         {
             _logger = logger;
             _userManager = userManager;
+            _validation = validation;
         }
 
         public IActionResult Index()
@@ -33,7 +36,19 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
-        {
+        {          
+            var validationResultat = _validation.Validate(anfrage);
+
+            if (!validationResultat.IsValid)
+            {
+                foreach (var error in validationResultat.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                // Zeigen die Seite erneut an, wenn Validierungsfehler vorliegen.
+                return View(anfrage);
+            }
             if (!ModelState.IsValid)
             {
                 return View();
