@@ -1,4 +1,5 @@
 using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
 using FluentValidation;
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 
 builder.Services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
 
-builder.Services.AddIdentity<AppBenutzer,AppRolle>().AddEntityFrameworkStores<AppDbKontext>();
+builder.Services.AddIdentityMitErweiterung();
 
 var app = builder.Build();
 
