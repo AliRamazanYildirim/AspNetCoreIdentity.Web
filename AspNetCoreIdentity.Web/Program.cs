@@ -16,11 +16,11 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlVerbindung"));
 });
 
+builder.Services.AddIdentityMitErweiterung();
+
 builder.Services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
-
-builder.Services.AddIdentityMitErweiterung();
 
 var app = builder.Build();
 

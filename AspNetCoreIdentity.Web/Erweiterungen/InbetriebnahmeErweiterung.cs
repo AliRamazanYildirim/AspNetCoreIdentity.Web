@@ -1,4 +1,5 @@
 ﻿using AspNetCoreIdentity.Web.FluentValidierer;
+using AspNetCoreIdentity.Web.Lokalisierungen;
 using AspNetCoreIdentity.Web.Models;
 
 namespace AspNetCoreIdentity.Web.Erweiterungen
@@ -17,7 +18,8 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = true;
-            }).AddPasswordValidator<PasswortValidator>().AddUserValidator<UserValidator>().AddEntityFrameworkStores<AppDbKontext>();
+            }).AddPasswordValidator<PasswortValidator>().AddUserValidator<UserValidator>()
+            .AddErrorDescriber<LokalisierungIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbKontext>();
         }
 
     }
