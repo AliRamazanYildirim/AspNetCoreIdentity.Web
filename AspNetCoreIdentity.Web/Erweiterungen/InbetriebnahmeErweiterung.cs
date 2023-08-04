@@ -1,6 +1,8 @@
-﻿using AspNetCoreIdentity.Web.FluentValidierer;
+﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
 using AspNetCoreIdentity.Web.Models;
+using FluentValidation;
 
 namespace AspNetCoreIdentity.Web.Erweiterungen
 {
@@ -20,6 +22,10 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                 options.Password.RequireDigit = true;
             }).AddPasswordValidator<PasswortValidator>().AddUserValidator<UserValidator>()
             .AddErrorDescriber<LokalisierungIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbKontext>();
+
+            services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
+            services.AddScoped<IValidator<EinloggenAnsichtModell>, EinloggenValidator>();
+            services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
         }
 
     }

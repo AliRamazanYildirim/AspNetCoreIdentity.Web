@@ -18,11 +18,6 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 
 builder.Services.AddIdentityMitErweiterung();
 
-builder.Services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
-builder.Services.AddScoped<IValidator<EinloggenAnsichtModell>, EinloggenValidator>();
-
-builder.Services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
