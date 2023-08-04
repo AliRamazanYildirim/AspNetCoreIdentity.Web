@@ -34,6 +34,12 @@ namespace AspNetCoreIdentity.Web.Controllers
             return View();
         }
 
+        public IActionResult Einloggen()
+        {
+
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
         {          

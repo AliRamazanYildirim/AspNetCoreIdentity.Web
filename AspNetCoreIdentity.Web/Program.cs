@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 builder.Services.AddIdentityMitErweiterung();
 
 builder.Services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
+builder.Services.AddScoped<IValidator<EinloggenAnsichtModell>, EinloggenValidator>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
 
