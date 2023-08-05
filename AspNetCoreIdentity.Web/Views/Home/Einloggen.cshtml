@@ -5,10 +5,12 @@
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <h2>Benutzer-Login-Formular</h2>
-        <form>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+        </div>
+        <form asp-controller="Home" asp-action="Einloggen" method="post">
             <div class="mb-3">
                 <label for="Email" class="form-label" asp-for="Email">E-Mail Adresse</label>
-                <input type="email" class="form-control" aria-describedby="emailHelp">
+                <input class="form-control" aria-describedby="emailHelp" asp-for="Email">
                 <span asp-validation-for="Email" class="text-danger"></span>
                 <div id="emailHelp" class="form-text">Wir werden Ihre E-Mail niemals an Dritte weitergeben.</div>
             </div>
@@ -19,7 +21,7 @@
 
             </div>
             <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="ErrinnereMich">
+                <input type="checkbox" class="form-check-input" asp-for="ErrinnereMich">
                 <label class="form-check-label" for="ErrinnereMich" asp-for="ErrinnereMich">Errinnere mich</label>
             </div>
             <button type="submit" class="btn btn-primary">Senden</button>

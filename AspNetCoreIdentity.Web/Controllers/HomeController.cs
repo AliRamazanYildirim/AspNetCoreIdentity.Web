@@ -4,6 +4,7 @@ using AspNetCoreIdentity.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using AspNetCoreIdentity.Web.Erweiterungen;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {
@@ -11,13 +12,15 @@ namespace AspNetCoreIdentity.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<AppBenutzer> _userManager;
+        private readonly SignInManager<AppBenutzer> _signInManager;
         private readonly BenutzerValidator _validation;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation, SignInManager<AppBenutzer> signInManager)
         {
             _logger = logger;
             _userManager = userManager;
             _validation = validation;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -39,10 +42,49 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Einloggen(EinloggenAnsichtModell anfrage, string? returnUrl = null)
+        {
+            returnUrl = returnUrl ?? Url.Action("Index", "Home");
+            
+            if (anfrage.Email != null && anfrage.Passwort != null)
+            {
+                var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email);
+                
+                if (gibtsBenutzer == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email und Passwort dürfen nicht null sein.");
+                    return View();
+                }
 
+                var einloggenResultat = await _signInManager.PasswordSignInAsync(gibtsBenutzer, anfrage.Passwort, anfrage.ErrinnereMich, true);
+                
+                if (einloggenResultat.Succeeded)
+                {
+                    // Null-Check für returnUrl vor Verwendung in Redirect
+                    if (returnUrl != null)
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    // Behandlung des Falls, dass returnUrl null ist
+                    else
+                    {
+                        // Umleitung zu einer Standardaktion, wenn returnUrl null ist
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+
+                ModelState.AddModelStateFehler(new List<string>()
+                {
+                     "Email und Passwort dürfen nicht null sein."
+                });
+            }
+
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
-        {          
+        {
             var validationResultat = _validation.Validate(anfrage);
 
             if (!validationResultat.IsValid)
@@ -65,18 +107,15 @@ namespace AspNetCoreIdentity.Web.Controllers
                 UserName = anfrage.BenutzerName,
                 PhoneNumber = anfrage.Telefonnummer,
                 Email = anfrage.Email
-            }, anfrage.PasswortBestätigen ?? "");           
+            }, anfrage.PasswortBestätigen ?? "");
 
-            if(identityResultat.Succeeded)
+            if (identityResultat.Succeeded)
             {
                 TempData["ErfolgsNachricht"] = "Der Mitgliedschaftsprozess war erfolgreich.";
                 return RedirectToAction(nameof(HomeController.Anmelden));
             }
 
-            foreach (var identityFehler in identityResultat.Errors)
-            {
-                ModelState.AddModelError(string.Empty, identityFehler.Description);
-            }
+            ModelState.AddModelStateFehler(identityResultat.Errors.Select(x => x.Description).ToList());
 
             return View();
         }
