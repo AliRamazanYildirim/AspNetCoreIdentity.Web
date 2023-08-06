@@ -46,19 +46,20 @@ namespace AspNetCoreIdentity.Web.Controllers
         public async Task<IActionResult> Einloggen(EinloggenAnsichtModell anfrage, string? returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Action("Index", "Home");
-            
+
             if (anfrage.Email != null && anfrage.Passwort != null)
             {
                 var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email);
-                
+
                 if (gibtsBenutzer == null)
                 {
                     ModelState.AddModelError(string.Empty, "Email und Passwort stimmen nicht überein.");
                     return View();
                 }
 
-                var einloggenResultat = await _signInManager.PasswordSignInAsync(gibtsBenutzer, anfrage.Passwort, anfrage.ErrinnereMich, true);
-                
+                var einloggenResultat = await _signInManager.PasswordSignInAsync(gibtsBenutzer, anfrage.Passwort,
+                    anfrage.ErrinnereMich, true);
+
                 if (einloggenResultat.Succeeded)
                 {
                     // Null-Check für returnUrl vor Verwendung in Redirect
@@ -74,9 +75,21 @@ namespace AspNetCoreIdentity.Web.Controllers
                     }
                 }
 
+                if (einloggenResultat.IsLockedOut)
+                {
+                    ModelState.AddModelStateFehlerListe(new List<string>()
+                    {
+                        "Sie können erst nach 3 Minuten eintreten."
+
+                    });
+                    return View();
+
+                }
+
                 ModelState.AddModelStateFehlerListe(new List<string>()
                 {
-                     "Email und Passwort stimmen nicht überein."
+                     "Email und Passwort stimmen nicht überein.",
+                     $"Anzahl der erfolglosen Einträge {await _userManager.GetAccessFailedCountAsync(gibtsBenutzer)}"
                 });
             }
 

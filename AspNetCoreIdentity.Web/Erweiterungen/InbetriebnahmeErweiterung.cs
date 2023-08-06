@@ -20,6 +20,10 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = true;
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                options.Lockout.MaxFailedAccessAttempts = 3;
+
             }).AddPasswordValidator<PasswortValidator>().AddUserValidator<UserValidator>()
             .AddErrorDescriber<LokalisierungIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbKontext>();
 
