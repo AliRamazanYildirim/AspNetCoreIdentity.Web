@@ -53,7 +53,7 @@ namespace AspNetCoreIdentity.Web.Controllers
                 
                 if (gibtsBenutzer == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Email und Passwort dürfen nicht null sein.");
+                    ModelState.AddModelError(string.Empty, "Email und Passwort stimmen nicht überein.");
                     return View();
                 }
 
@@ -74,9 +74,9 @@ namespace AspNetCoreIdentity.Web.Controllers
                     }
                 }
 
-                ModelState.AddModelStateFehler(new List<string>()
+                ModelState.AddModelStateFehlerListe(new List<string>()
                 {
-                     "Email und Passwort dürfen nicht null sein."
+                     "Email und Passwort stimmen nicht überein."
                 });
             }
 
@@ -115,7 +115,7 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return RedirectToAction(nameof(HomeController.Anmelden));
             }
 
-            ModelState.AddModelStateFehler(identityResultat.Errors.Select(x => x.Description).ToList());
+            ModelState.AddModelStateFehlerListe(identityResultat.Errors.Select(x => x.Description).ToList());
 
             return View();
         }
