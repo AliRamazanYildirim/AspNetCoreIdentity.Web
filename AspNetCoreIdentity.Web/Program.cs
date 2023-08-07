@@ -18,6 +18,18 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 
 builder.Services.AddIdentityMitErweiterung();
 
+
+builder.Services.ConfigureApplicationCookie(conf =>
+{
+    var cookieBuilder = new CookieBuilder();
+
+    cookieBuilder.Name = "IdentityCookie";
+    conf.LoginPath = new PathString("/Home/Einloggen");
+    conf.Cookie = cookieBuilder;
+    conf.ExpireTimeSpan = TimeSpan.FromDays(30);
+    conf.SlidingExpiration = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
