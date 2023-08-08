@@ -13,10 +13,9 @@ namespace AspNetCoreIdentity.Web.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Ausloggen()
+        public async Task Ausloggen()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
         }
     }
 }

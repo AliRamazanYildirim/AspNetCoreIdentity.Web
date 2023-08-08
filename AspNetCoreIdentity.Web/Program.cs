@@ -25,6 +25,7 @@ builder.Services.ConfigureApplicationCookie(conf =>
 
     cookieBuilder.Name = "IdentityCookie";
     conf.LoginPath = new PathString("/Home/Einloggen");
+    conf.LogoutPath = new PathString("/Mitglied/Ausloggen");
     conf.Cookie = cookieBuilder;
     conf.ExpireTimeSpan = TimeSpan.FromDays(30);
     conf.SlidingExpiration = true;
