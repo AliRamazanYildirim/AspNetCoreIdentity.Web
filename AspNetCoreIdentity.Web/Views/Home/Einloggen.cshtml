@@ -7,7 +7,7 @@
         <h2>Benutzer-Login-Formular</h2>
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
         </div>
-        <form asp-controller="Home" asp-action="Einloggen" method="post">
+        <form asp-controller="Home" asp-route-returnurl="@Context.Request.Query["returnUrl"]" asp-action="Einloggen" method="post">
             <div class="mb-3">
                 <label for="Email" class="form-label" asp-for="Email">E-Mail Adresse</label>
                 <input class="form-control" aria-describedby="emailHelp" asp-for="Email">
