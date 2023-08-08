@@ -1,0 +1,20 @@
+﻿@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <ul class="navbar-nav me-0">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @User.Identity.Name
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Ausloggen</a></li>
+            </ul>
+        </li>
+    </ul>
+}
+else
+{
+    <form class="d-flex" role="anmelden">
+        <a class="btn btn-outline-success mx-2" asp-controller="Home" asp-action="Anmelden">Anmelden</a>
+        <a class="btn btn-outline-success" asp-controller="Home" asp-action="Einloggen">Einloggen</a>
+    </form>
+}
