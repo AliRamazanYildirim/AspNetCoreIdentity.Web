@@ -20,11 +20,19 @@
                 <span asp-validation-for="Passwort" class="text-danger"></span>
 
             </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" asp-for="ErrinnereMich">
-                <label class="form-check-label" for="ErrinnereMich" asp-for="ErrinnereMich">Errinnere mich</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" asp-for="ErrinnereMich">
+                        <label class="form-check-label" for="ErrinnereMich" asp-for="ErrinnereMich">Errinnere mich</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a class="float-end" asp-controller="Home" asp-action="PasswortZurücksetzen">Passwort vergessen?</a>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Senden</button>
+
+            <button type="submit" class="btn btn-primary">Einloggen</button>
         </form>
     </div>
 </div>

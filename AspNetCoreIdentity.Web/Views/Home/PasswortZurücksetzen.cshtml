@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "PasswortZurücksetzen";
+}
+
+@model PasswortZurücksetzenAnsichtModell
+
+@section Scripts
+    {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="alert alert-info">Der Link zur Erneuerung des Passworts wird an Ihre E-Mail-Adresse geschickt.</div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+        </div>
+        <form method="post">
+            <div class="mb-3">
+                <label for="Email" class="form-label" asp-for="Email">E-Mail Adresse</label>
+                <input class="form-control" aria-describedby="emailHelp" asp-for="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <div id="emailHelp" class="form-text">Wir werden Ihre E-Mail niemals an Dritte weitergeben.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Senden</button>        
+        </form>
+    </div>
+</div>
+
+
+
+
