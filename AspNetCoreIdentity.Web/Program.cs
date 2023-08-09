@@ -4,6 +4,7 @@ using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -12,7 +12,16 @@
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        <div class="alert alert-info">Der Link zur Erneuerung des Passworts wird an Ihre E-Mail-Adresse geschickt.</div>
+        @if (TempData["ErfolgsNachricht"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["ErfolgsNachricht"]
+            </div>
+        }
+        @if (TempData["ErfolgsNachricht"] == null)
+        {
+            <div class="alert alert-info">Der Link zur Erneuerung des Passworts wird an Ihre E-Mail-Adresse geschickt.</div>
+        }
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
         </div>
         <form method="post">

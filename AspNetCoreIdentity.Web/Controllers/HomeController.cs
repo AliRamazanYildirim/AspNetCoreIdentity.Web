@@ -137,6 +137,27 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> PasswortVergessen(PasswortVergessenAnsichtModell anfrage)
+        {
+            var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email);
+
+            if (gibtsBenutzer == null) 
+            {
+                ModelState.AddModelError(String.Empty, "Es wurde kein Benutzer mit dieser E-Mail-Adresse gefunden.");
+                return View();
+            }
+
+            string passwordZurücksetzenToken =await _userManager.GeneratePasswordResetTokenAsync(gibtsBenutzer);
+            var passwortZurücksetzenLink = Url.Action("PasswortZurücksetzen", "Home", new
+            {
+                userId = gibtsBenutzer.Id,
+                Token = passwordZurücksetzenToken
+            });
+
+            TempData["ErfolgsNachricht"] = "Der Link zur Erneuerung des Passworts wurde an Ihre E-Mail-Adresse gesendet.";
+            return RedirectToAction(nameof(PasswortVergessen));
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
