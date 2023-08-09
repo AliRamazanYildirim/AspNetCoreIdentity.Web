@@ -140,6 +140,11 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> PasswortVergessen(PasswortVergessenAnsichtModell anfrage)
         {
+            if (anfrage == null || string.IsNullOrEmpty(anfrage.Email))
+            {
+                ModelState.AddModelError(String.Empty, "Ungültige Anfrage.");
+                return View();
+            }
             var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email);
 
             if (gibtsBenutzer == null) 
