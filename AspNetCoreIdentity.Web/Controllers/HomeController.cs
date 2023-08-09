@@ -133,7 +133,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             return View();
         }
 
-        public IActionResult PasswortZurücksetzen()
+        public IActionResult PasswortVergessen()
         {
             return View();
         }
