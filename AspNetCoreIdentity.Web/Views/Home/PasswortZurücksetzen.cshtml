@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewData["Title"] = "PasswortZurücksetzen";
+}
+@model PasswortZurücksetzenAnsichtModell
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        @if (TempData["ErfolgsNachricht"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["ErfolgsNachricht"]
+            </div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+        </div>
+
+        <form method="post">
+            <div class="col-md-8 offset-md-4 mb-3">
+                <h4>Ein neues Passwort erstellen </h4>
+            </div>
+            <div class="row mb-3">
+                <label for="Passwort" class="col-md-4 col-form-label" asp-for="Passwort"></label>
+                <div class="col-md-8">
+                    <input asp-for="Passwort" class="form-control">
+                    <span asp-validation-for="Passwort" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="PasswortBestätigen" class="col-md-4 col-form-label" asp-for="PasswortBestätigen">Passwort Bestätigen</label>
+                <div class="col-md-8">
+                    <input asp-for="PasswortBestätigen" class="form-control">
+                    <span asp-validation-for="PasswortBestätigen" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-8 offset-md-4 text-center">
+                    <button type="submit" class="btn btn-primary">Passwort erneuern</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

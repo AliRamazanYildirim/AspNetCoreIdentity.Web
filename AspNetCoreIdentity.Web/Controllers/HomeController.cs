@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.Dienste;
+using AspNetCoreIdentity.Web.OptionModell;
+using NuGet.Common;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {
@@ -39,7 +41,43 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
+        {
+            var validationResultat = _validation.Validate(anfrage);
 
+            if (!validationResultat.IsValid)
+            {
+                foreach (var error in validationResultat.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                // Zeigen die Seite erneut an, wenn Validierungsfehler vorliegen.
+                return View(anfrage);
+            }
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var identityResultat = await _userManager.CreateAsync(new()
+            {
+                UserName = anfrage.BenutzerName,
+                PhoneNumber = anfrage.Telefonnummer,
+                Email = anfrage.Email
+            }, anfrage.PasswortBestätigen ?? "");
+
+            if (identityResultat.Succeeded)
+            {
+                TempData["ErfolgsNachricht"] = "Der Mitgliedschaftsprozess war erfolgreich.";
+                return RedirectToAction(nameof(HomeController.Anmelden));
+            }
+
+            ModelState.AddModelStateFehlerListe(identityResultat.Errors.Select(x => x.Description).ToList());
+
+            return View();
+        }
         public IActionResult Einloggen()
         {
 
@@ -98,44 +136,6 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             return View();
         }
-        [HttpPost]
-        public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
-        {
-            var validationResultat = _validation.Validate(anfrage);
-
-            if (!validationResultat.IsValid)
-            {
-                foreach (var error in validationResultat.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-
-                // Zeigen die Seite erneut an, wenn Validierungsfehler vorliegen.
-                return View(anfrage);
-            }
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            var identityResultat = await _userManager.CreateAsync(new()
-            {
-                UserName = anfrage.BenutzerName,
-                PhoneNumber = anfrage.Telefonnummer,
-                Email = anfrage.Email
-            }, anfrage.PasswortBestätigen ?? "");
-
-            if (identityResultat.Succeeded)
-            {
-                TempData["ErfolgsNachricht"] = "Der Mitgliedschaftsprozess war erfolgreich.";
-                return RedirectToAction(nameof(HomeController.Anmelden));
-            }
-
-            ModelState.AddModelStateFehlerListe(identityResultat.Errors.Select(x => x.Description).ToList());
-
-            return View();
-        }
-
         public IActionResult PasswortVergessen()
         {
             return View();
@@ -156,18 +156,52 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            string passwordZurücksetzenToken =await _userManager.GeneratePasswordResetTokenAsync(gibtsBenutzer);
+            string passwordZurücksetzenToken = await _userManager.GeneratePasswordResetTokenAsync(gibtsBenutzer);
             var passwortZurücksetzenLink = Url.Action("PasswortZurücksetzen", "Home", new
             {
                 userId = gibtsBenutzer.Id,
                 Token = passwordZurücksetzenToken,
-                HttpContext.Request.Scheme
-            });
+            }, HttpContext.Request.Scheme);
 
             await _emailDienst.SendeZurücksetzenPasswortEmail(passwortZurücksetzenLink, gibtsBenutzer.Email);
 
             TempData["ErfolgsNachricht"] = "Der Link zur Erneuerung des Passworts wurde an Ihre E-Mail-Adresse gesendet.";
             return RedirectToAction(nameof(PasswortVergessen));
+        }
+        public IActionResult PasswortZurücksetzen(string? userId, string? token)
+        {
+            TempData["userId"] = userId;
+            TempData["token"] = token;
+
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> PasswortZurücksetzen(PasswortZurücksetzenAnsichtModell anfrage)
+        {
+            var userId = TempData["userId"]?.ToString();
+            var token = TempData["token"]?.ToString();
+            if (userId == null)
+            {
+                ModelState.AddModelError(String.Empty, "Es wurde kein BenutzerId gefunden");
+                return View();
+            }
+
+
+            var gibtsBenutzer = await _userManager.FindByIdAsync(userId);
+
+            if (gibtsBenutzer == null || token == null || string.IsNullOrEmpty(anfrage.Passwort))
+            {
+                ModelState.AddModelError(String.Empty, "Es wurde kein Benutzer gefunden.");
+                return View();
+            }
+
+            var resultat = await _userManager.ResetPasswordAsync(gibtsBenutzer, token, anfrage.Passwort);
+            if(resultat.Succeeded)
+            {
+                TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich erneuert.";
+            }
+            ModelState.AddModelStateFehlerListe(resultat.Errors.Select(x => x.Description).ToList());
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
