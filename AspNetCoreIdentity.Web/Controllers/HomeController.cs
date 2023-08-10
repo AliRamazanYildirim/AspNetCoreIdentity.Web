@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using AspNetCoreIdentity.Web.Erweiterungen;
+using AspNetCoreIdentity.Web.Dienste;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {
@@ -14,13 +15,15 @@ namespace AspNetCoreIdentity.Web.Controllers
         private readonly UserManager<AppBenutzer> _userManager;
         private readonly SignInManager<AppBenutzer> _signInManager;
         private readonly BenutzerValidator _validation;
+        private readonly IEmailDienst _emailDienst;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation, SignInManager<AppBenutzer> signInManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation, SignInManager<AppBenutzer> signInManager, IEmailDienst emailDienst)
         {
             _logger = logger;
             _userManager = userManager;
             _validation = validation;
             _signInManager = signInManager;
+            _emailDienst = emailDienst;
         }
 
         public IActionResult Index()
@@ -157,8 +160,11 @@ namespace AspNetCoreIdentity.Web.Controllers
             var passwortZurücksetzenLink = Url.Action("PasswortZurücksetzen", "Home", new
             {
                 userId = gibtsBenutzer.Id,
-                Token = passwordZurücksetzenToken
+                Token = passwordZurücksetzenToken,
+                HttpContext.Request.Scheme
             });
+
+            await _emailDienst.SendeZurücksetzenPasswortEmail(passwortZurücksetzenLink, gibtsBenutzer.Email);
 
             TempData["ErfolgsNachricht"] = "Der Link zur Erneuerung des Passworts wurde an Ihre E-Mail-Adresse gesendet.";
             return RedirectToAction(nameof(PasswortVergessen));

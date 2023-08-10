@@ -2,10 +2,12 @@ using AspNetCoreIdentity.Web.AnsichtModelle;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
+using AspNetCoreIdentity.Web.OptionModell;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,7 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlVerbindung"));
 });
 
+builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection("EmailEinstellungen"));
 builder.Services.AddIdentityMitErweiterung();
 
 
