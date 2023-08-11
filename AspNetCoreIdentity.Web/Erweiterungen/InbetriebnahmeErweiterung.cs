@@ -12,6 +12,10 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
     {
         public static void AddIdentityMitErweiterung(this IServiceCollection services)
         {
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(30);
+            });
             services.Configure<DataProtectionTokenProviderOptions>(option =>
             {
                 option.TokenLifespan = TimeSpan.FromHours(7);

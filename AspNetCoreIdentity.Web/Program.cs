@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlVerbindung"));
 });
 
+
 builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection("EmailEinstellungen"));
 builder.Services.AddIdentityMitErweiterung();
 
