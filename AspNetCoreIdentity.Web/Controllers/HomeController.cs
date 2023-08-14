@@ -86,6 +86,10 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Einloggen(EinloggenAnsichtModell anfrage, string? returnUrl = null)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             returnUrl = returnUrl ?? Url.Action("Index", "Home");
 
             if (anfrage.Email != null && anfrage.Passwort != null)

@@ -20,9 +20,9 @@
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
         </div>
 
-        <form asp-controller="Home" asp-action="PasswortÄnderung" method="post">
+        <form asp-controller="Mitglied" asp-action="PasswortÄnderung" method="post">
             <div class="row mb-3">
-                <label for="Telefonnummer" class="col-md-4 col-form-label" asp-for="AltesPasswort">Altes Passwort</label>
+                <label for="AltesPasswort" class="col-md-4 col-form-label" asp-for="AltesPasswort">Altes Passwort</label>
                 <div class="col-md-8">
                     <input asp-for="AltesPasswort" class="form-control">
                     <span asp-validation-for="AltesPasswort" class="text-danger"></span>
