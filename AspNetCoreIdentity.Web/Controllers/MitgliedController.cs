@@ -35,5 +35,9 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             await _signInManager.SignOutAsync();
         }
+        public IActionResult PasswortÄnderung()
+        {            
+            return View();
+        }
     }
 }

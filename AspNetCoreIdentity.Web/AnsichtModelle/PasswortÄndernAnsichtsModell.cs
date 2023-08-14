@@ -4,6 +4,6 @@
     {
         public string AltesPasswort { get; set; } = null!;
         public string NeuesPasswort { get; set; } = null!;
-        public string PasswortBestätigen { get; set; } = null!;
+        public string PasswortNeuBestätigen { get; set; } = null!;
     }
 }

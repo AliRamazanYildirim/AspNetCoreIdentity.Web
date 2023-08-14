@@ -22,7 +22,7 @@ namespace AspNetCoreIdentity.Web.FluentValidierer
             RuleFor(b => b.NeuesPasswort).Matches(@"[a-z]+").WithMessage("Ihr Passwort muss mindestens einen Kleinbuchstaben enthalten.");
             RuleFor(b => b.NeuesPasswort).Matches(@"[0-9]+").WithMessage("Ihr Passwort muss mindestens eine Nummer enthalten.");
             RuleFor(b => b.NeuesPasswort).Matches(@"[\!\?\*\.]*$").WithMessage("Ihr Passwort muss mindestens ein (!? *.) enthalten.");
-            RuleFor(x => x.PasswortBestätigen).NotEmpty().WithMessage("Bitte bestätigen Sie Ihr Passwort.");
+            RuleFor(x => x.PasswortNeuBestätigen).NotEmpty().WithMessage("Bitte bestätigen Sie Ihr Passwort.");
         }
     }
 }
