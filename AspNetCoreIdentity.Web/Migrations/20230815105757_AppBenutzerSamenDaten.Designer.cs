@@ -4,6 +4,7 @@ using AspNetCoreIdentity.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspNetCoreIdentity.Web.Migrations
 {
     [DbContext(typeof(AppDbKontext))]
-    partial class AppDbKontextModelSnapshot : ModelSnapshot
+    [Migration("20230815105757_AppBenutzerSamenDaten")]
+    partial class AppBenutzerSamenDaten
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
