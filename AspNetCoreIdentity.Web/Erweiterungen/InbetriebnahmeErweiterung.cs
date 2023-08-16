@@ -45,6 +45,7 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             services.AddScoped<IValidator<PasswortZurücksetzenAnsichtModell>, PasswortZurücksetzenValidator>();
             services.AddScoped<IEmailDienst, EmailDienst>();
             services.AddScoped<IValidator<PasswortÄndernAnsichtsModell>, PasswortÄndernValidator>();
+            services.AddScoped<IValidator<BenutzerBearbeitenAnsichtModell>, BenutzerBearbeitenValidator>();
             services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
         }
 
