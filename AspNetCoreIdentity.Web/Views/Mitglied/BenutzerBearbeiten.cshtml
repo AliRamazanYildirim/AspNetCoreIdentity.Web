@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewData["Title"] = "BenutzerBearbeiten";
+}
+@model BenutzerBearbeitenAnsichtModell
+@section Scripts
+    {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2>Aktualisierung für Benutzer</h2>
+        @if (TempData["ErfolgsNachricht"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["ErfolgsNachricht"]
+            </div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+        </div>
+
+        <form asp-controller="Mitglied" asp-action="BenutzerBearbeiten" method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <label for="BenutzerName" class="col-md-4 col-form-label" asp-for="BenutzerName">BenutzerName</label>
+                <div class="col-md-8">
+                    <input asp-for="BenutzerName" class="form-control">
+                    <span asp-validation-for="BenutzerName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="Email" class="col-md-4 col-form-label" asp-for="Email">Email</label>
+                <div class="col-md-8">
+                    <input asp-for="Email" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="Telefonnummer" class="col-md-4 col-form-label" asp-for="Telefonnummer">Telefonnummer</label>
+                <div class="col-md-8">
+                    <input asp-for="Telefonnummer" class="form-control">
+                    <span asp-validation-for="Telefonnummer" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="Stadt" class="col-md-4 col-form-label" asp-for="Stadt">Stadt</label>
+                <div class="col-md-8">
+                    <input asp-for="Stadt" class="form-control">
+                    <span asp-validation-for="Stadt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="Geburtsdatum" class="col-md-4 col-form-label" asp-for="Geburtsdatum">Geburtsdatum</label>
+                <div class="col-md-8">
+                    <input type="date" asp-for="Geburtsdatum" class="form-control">
+                    <span asp-validation-for="Geburtsdatum" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="Geschlecht" class="col-md-4 col-form-label" asp-for="Geschlecht">Geschlecht</label>
+                <div class="col-md-8">
+                    <select class="form-control" asp-for="Geschlecht" asp-items="ViewBag.geschlecht">
+                        <option value="">Wählen Sie das Geschlecht</option>
+                    </select>                  
+                    <span asp-validation-for="Geschlecht" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="Bild" class="col-md-4 col-form-label" asp-for="Bild">Bild</label>
+                <div class="col-md-8">
+                    <input type="file" asp-for="Bild" class="form-control">
+                    <span asp-validation-for="Bild" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-8 offset-md-4 text-center">
+                    <button type="submit" class="btn btn-primary">Aktualisieren</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

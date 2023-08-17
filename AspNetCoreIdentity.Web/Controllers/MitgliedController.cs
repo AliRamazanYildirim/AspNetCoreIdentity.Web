@@ -5,6 +5,7 @@ using AspNetCoreIdentity.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace AspNetCoreIdentity.Web.Controllers
@@ -89,6 +90,23 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich geändert.";
             return View();
+        }
+        public async Task<IActionResult> BenutzerBearbeiten()
+        {
+            ViewBag.geschlecht = new SelectList(Enum.GetNames(typeof(Geschlecht)));
+
+            var aktuellerBenutzer = await _userManager.FindByNameAsync(User.Identity!.Name!)!;
+
+            var benutzerAnscihtModell = new BenutzerBearbeitenAnsichtModell()
+            {
+                BenutzerName = aktuellerBenutzer!.UserName,
+                Email = aktuellerBenutzer.Email,
+                Telefonnummer = aktuellerBenutzer.PhoneNumber,
+                Stadt = aktuellerBenutzer.Stadt,
+                Geburtsdatum = aktuellerBenutzer.Geburtsdatum,
+                Geschlecht = aktuellerBenutzer.Geschlecht,
+            };
+            return View(benutzerAnscihtModell);
         }
     }
 }

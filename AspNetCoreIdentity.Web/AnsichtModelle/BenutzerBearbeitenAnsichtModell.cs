@@ -1,4 +1,6 @@
-﻿namespace AspNetCoreIdentity.Web.AnsichtModelle
+﻿using AspNetCoreIdentity.Web.Models;
+
+namespace AspNetCoreIdentity.Web.AnsichtModelle
 {
     public class BenutzerBearbeitenAnsichtModell
     {
@@ -8,6 +10,6 @@
         public string? Stadt { get; set; }
         public IFormFile? Bild { get; set; }
         public DateTime? Geburtsdatum { get; set; }
-        public byte? Geschlecht { get; set; }
+        public Geschlecht? Geschlecht { get; set; }
     }
 }
