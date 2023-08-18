@@ -144,7 +144,7 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             if (!benutzerAktualisieren.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Dieser Benutzer wurde nicht gefunden.");
+                ModelState.AddModelStateFehlerListe(benutzerAktualisieren.Errors);
                 return View();
             }
 
