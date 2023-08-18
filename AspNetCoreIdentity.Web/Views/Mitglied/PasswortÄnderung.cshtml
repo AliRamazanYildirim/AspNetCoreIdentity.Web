@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "PasswortÄnderung";
 }
 @model PasswortÄndernAnsichtsModell
@@ -24,21 +23,21 @@
             <div class="row mb-3">
                 <label for="AltesPasswort" class="col-md-4 col-form-label" asp-for="AltesPasswort">Altes Passwort</label>
                 <div class="col-md-8">
-                    <input asp-for="AltesPasswort" class="form-control">
+                    <input type="password" asp-for="AltesPasswort" class="form-control">
                     <span asp-validation-for="AltesPasswort" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label for="Passwort" class="col-md-4 col-form-label" asp-for="NeuesPasswort">Neues Passwort</label>
+                <label for="NeuesPasswort" class="col-md-4 col-form-label" asp-for="NeuesPasswort">Neues Passwort</label>
                 <div class="col-md-8">
-                    <input asp-for="NeuesPasswort" class="form-control">
+                    <input type="password" asp-for="NeuesPasswort" class="form-control">
                     <span asp-validation-for="NeuesPasswort" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="PasswortBestätigen" class="col-md-4 col-form-label" asp-for="PasswortNeuBestätigen">Passwort Bestätigen</label>
                 <div class="col-md-8">
-                    <input asp-for="PasswortNeuBestätigen" class="form-control">
+                    <input type="password" asp-for="PasswortNeuBestätigen" class="form-control">
                     <span asp-validation-for="PasswortNeuBestätigen" class="text-danger"></span>
                 </div>
             </div>
