@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.FileProviders;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace AspNetCoreIdentity.Web.Controllers
@@ -16,12 +17,16 @@ namespace AspNetCoreIdentity.Web.Controllers
         private readonly SignInManager<AppBenutzer> _signInManager;
         private readonly UserManager<AppBenutzer> _userManager;
         private readonly PasswortÄndernValidator _validation;
+        private readonly BenutzerBearbeitenValidator _validator;
+        private readonly IFileProvider _fileProvider;
 
-        public MitgliedController(SignInManager<AppBenutzer> signInManager, UserManager<AppBenutzer> userManager, PasswortÄndernValidator validation)
+        public MitgliedController(SignInManager<AppBenutzer> signInManager, UserManager<AppBenutzer> userManager, PasswortÄndernValidator validation, BenutzerBearbeitenValidator validator, IFileProvider fileProvider)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _validation = validation;
+            _validator = validator;
+            _fileProvider = fileProvider;
         }
 
         public async Task<IActionResult> Index()
@@ -104,8 +109,61 @@ namespace AspNetCoreIdentity.Web.Controllers
                 Telefonnummer = aktuellerBenutzer.PhoneNumber,
                 Stadt = aktuellerBenutzer.Stadt,
                 Geburtsdatum = aktuellerBenutzer.Geburtsdatum,
-                Geschlecht = aktuellerBenutzer.Geschlecht,
+                Geschlecht = aktuellerBenutzer.Geschlecht
             };
+            return View(benutzerAnscihtModell);
+        }
+        [HttpPost]
+        public async Task<IActionResult> BenutzerBearbeiten(BenutzerBearbeitenAnsichtModell anfrage)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var aktuellerBenutzer = await _userManager.FindByNameAsync(User.Identity!.Name!);
+
+            aktuellerBenutzer!.UserName = anfrage.BenutzerName;
+            aktuellerBenutzer.Email = anfrage.Email;
+            aktuellerBenutzer.PhoneNumber = anfrage.Telefonnummer;
+            aktuellerBenutzer.Geburtsdatum = anfrage.Geburtsdatum;
+            aktuellerBenutzer.Stadt = anfrage.Stadt;
+            aktuellerBenutzer.Geschlecht = anfrage.Geschlecht;
+
+            if (anfrage.Bild != null && anfrage.Bild.Length > 0) 
+            {
+                var bildWeg = _fileProvider.GetDirectoryContents("wwwroot");
+                var zufälligerDateiName = $"{Guid.NewGuid().ToString()}{Path.GetExtension(anfrage.Bild.FileName)}";
+                var neuerBildWeg = Path.Combine(bildWeg!.First(x => x.Name == "benutzerbilder").PhysicalPath!, zufälligerDateiName);
+                using var strom = new FileStream(neuerBildWeg, FileMode.Create);
+                await anfrage.Bild.CopyToAsync(strom);
+                aktuellerBenutzer.Bild = zufälligerDateiName;
+
+            }
+            var benutzerAktualisieren = await _userManager.UpdateAsync(aktuellerBenutzer);
+
+            if (!benutzerAktualisieren.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Dieser Benutzer wurde nicht gefunden.");
+                return View();
+            }
+
+            await _userManager.UpdateSecurityStampAsync(aktuellerBenutzer);
+            await _signInManager.SignOutAsync();
+            await _signInManager.SignInAsync(aktuellerBenutzer, true);
+
+            TempData["ErfolgsNachricht"] = "Die Mitgliederinformationen wurden erfolgreich geändert.";
+
+            var benutzerAnscihtModell = new BenutzerBearbeitenAnsichtModell()
+            {
+                BenutzerName = aktuellerBenutzer!.UserName,
+                Email = aktuellerBenutzer.Email,
+                Telefonnummer = aktuellerBenutzer.PhoneNumber,
+                Stadt = aktuellerBenutzer.Stadt,
+                Geburtsdatum = aktuellerBenutzer.Geburtsdatum,
+                Geschlecht = aktuellerBenutzer.Geschlecht
+            };
+
             return View(benutzerAnscihtModell);
         }
     }

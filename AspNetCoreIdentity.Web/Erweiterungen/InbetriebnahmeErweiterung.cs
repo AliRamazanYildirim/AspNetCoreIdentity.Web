@@ -5,6 +5,7 @@ using AspNetCoreIdentity.Web.Lokalisierungen;
 using AspNetCoreIdentity.Web.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 
 namespace AspNetCoreIdentity.Web.Erweiterungen
 {
@@ -39,14 +40,17 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<AppDbKontext>();
 
+            services.AddScoped<IEmailDienst, EmailDienst>();
+
             services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
             services.AddScoped<IValidator<EinloggenAnsichtModell>, EinloggenValidator>();
             services.AddScoped<IValidator<PasswortVergessenAnsichtModell>, PasswortVergessenValidator>();
             services.AddScoped<IValidator<PasswortZurücksetzenAnsichtModell>, PasswortZurücksetzenValidator>();
-            services.AddScoped<IEmailDienst, EmailDienst>();
             services.AddScoped<IValidator<PasswortÄndernAnsichtsModell>, PasswortÄndernValidator>();
             services.AddScoped<IValidator<BenutzerBearbeitenAnsichtModell>, BenutzerBearbeitenValidator>();
             services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
+
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
         }
 
     }
