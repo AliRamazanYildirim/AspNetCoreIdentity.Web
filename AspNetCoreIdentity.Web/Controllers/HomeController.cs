@@ -17,15 +17,17 @@ namespace AspNetCoreIdentity.Web.Controllers
         private readonly UserManager<AppBenutzer> _userManager;
         private readonly SignInManager<AppBenutzer> _signInManager;
         private readonly BenutzerValidator _validation;
+        private readonly EinloggenValidator _validator;
         private readonly IEmailDienst _emailDienst;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation, SignInManager<AppBenutzer> signInManager, IEmailDienst emailDienst)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation, SignInManager<AppBenutzer> signInManager, IEmailDienst emailDienst, EinloggenValidator validator)
         {
             _logger = logger;
             _userManager = userManager;
             _validation = validation;
             _signInManager = signInManager;
             _emailDienst = emailDienst;
+            _validator = validator;
         }
 
         public IActionResult Index()
@@ -86,11 +88,24 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Einloggen(EinloggenAnsichtModell anfrage, string? returnUrl = null)
         {
+            var validationResultat = await _validator.ValidateAsync(anfrage);
+            if (!validationResultat.IsValid)
+            {
+                foreach (var error in validationResultat.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                // Zeigen die Seite erneut an, wenn Validierungsfehler vorliegen.
+                return View(anfrage);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            returnUrl = returnUrl ?? Url.Action("Index", "Home");
+
+            returnUrl ??= Url.Action("Index", "Home");
 
             if (anfrage.Email != null && anfrage.Passwort != null)
             {
