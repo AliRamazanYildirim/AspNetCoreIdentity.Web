@@ -27,9 +27,10 @@ builder.Services.AddIdentityMitErweiterung();
 
 builder.Services.ConfigureApplicationCookie(conf =>
 {
-    var cookieBuilder = new CookieBuilder();
-
-    cookieBuilder.Name = "IdentityCookie";
+    var cookieBuilder = new CookieBuilder
+    {
+        Name = "IdentityCookie"
+    };
     conf.LoginPath = new PathString("/Home/Einloggen");
     conf.LogoutPath = new PathString("/Mitglied/Ausloggen");
     conf.Cookie = cookieBuilder;

@@ -133,7 +133,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             if (anfrage.Bild != null && anfrage.Bild.Length > 0) 
             {
                 var bildWeg = _fileProvider.GetDirectoryContents("wwwroot");
-                var zufälligerDateiName = $"{Guid.NewGuid().ToString()}{Path.GetExtension(anfrage.Bild.FileName)}";
+                var zufälligerDateiName = $"{Guid.NewGuid()}{Path.GetExtension(anfrage.Bild.FileName)}";
                 var neuerBildWeg = Path.Combine(bildWeg!.First(x => x.Name == "benutzerbilder").PhysicalPath!, zufälligerDateiName);
                 using var strom = new FileStream(neuerBildWeg, FileMode.Create);
                 await anfrage.Bild.CopyToAsync(strom);
