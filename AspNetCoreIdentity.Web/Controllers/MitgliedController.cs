@@ -116,6 +116,18 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> BenutzerBearbeiten(BenutzerBearbeitenAnsichtModell anfrage)
         {
+            var validationResultat = await _validator.ValidateAsync(anfrage);
+            if (!validationResultat.IsValid)
+            {
+                foreach (var error in validationResultat.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                // Zeigen die Seite erneut an, wenn Validierungsfehler vorliegen.
+                return View(anfrage);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View();
