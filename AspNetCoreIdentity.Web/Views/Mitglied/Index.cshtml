@@ -2,10 +2,16 @@
     ViewData["Title"] = "Index";
 }
 @model BenutzerAnsichtModell
-
+<div class="row">
+    <div class="col-md-6 offset-md-3 text-center">
+        <benutzer-bild bild-url="@Model.BildUrl" class="rounded"></benutzer-bild>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        <h1>Benutzerinformationen</h1>
+        <div class="text-center">
+            <h1>Benutzerinformationen</h1>
+        </div> 
         <table class="table table-striped">
             <thead>
                 <tr class="text-center">
@@ -15,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="text-center">
                     <td>@Model.BenutzerName</td>
                     <td>@Model.Email</td>
                     <td>@Model.Telefonnummer</td>

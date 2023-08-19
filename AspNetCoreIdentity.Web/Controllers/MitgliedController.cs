@@ -31,13 +31,14 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var aktuellerBenutzer = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var aktuellerBenutzer = (await _userManager.FindByNameAsync(User.Identity!.Name!))!;
 
             var benutzerAnsichtModell = new BenutzerAnsichtModell
             {
-                BenutzerName = aktuellerBenutzer!.UserName,
+                BenutzerName = aktuellerBenutzer.UserName,
                 Email = aktuellerBenutzer.Email,
-                Telefonnummer = aktuellerBenutzer.PhoneNumber
+                Telefonnummer = aktuellerBenutzer.PhoneNumber,
+                BildUrl = aktuellerBenutzer.Bild
             };
             return View(benutzerAnsichtModell);
         }
