@@ -27,7 +27,15 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Zurück zur Homepage</a>
-                        </li>             
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Rolle
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="admin" asp-controller="rollen" asp-action="Index">Alle Rollen</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
