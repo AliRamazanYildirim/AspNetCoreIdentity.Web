@@ -1,0 +1,34 @@
+﻿@model AdminModell.RolleErstellenAnsichtModell
+
+@{
+    ViewData["Title"] = "RolleErstellen";
+}
+
+<h1>Rolle Erstellen</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form asp-action="RolleErstellen" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label" class="col-md-4 col-form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="row mb-3 mt-3">
+                <div class="col-md-6 offset-md-3 text-center">
+                    <button type="submit" class="btn btn-primary">Erstellen</button>
+                </div>
+            </div>
+        </form>
+        <div class="float-end">
+            <a asp-action="Index">Zurück zur Rollenseite</a>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
