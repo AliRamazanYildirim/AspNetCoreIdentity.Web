@@ -1,4 +1,5 @@
 ﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using AspNetCoreIdentity.Web.Dienste;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
@@ -49,6 +50,7 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             services.AddScoped<IValidator<PasswortÄndernAnsichtsModell>, PasswortÄndernValidator>();
             services.AddScoped<IValidator<BenutzerBearbeitenAnsichtModell>, BenutzerBearbeitenValidator>();
             services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
+            services.AddValidatorsFromAssemblyContaining<RolleValidator>();
 
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
         }
