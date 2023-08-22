@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 {
@@ -21,9 +22,15 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             _validator = validator;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var rollen = await _roleManager.Roles.Select(x => new AuflistungRollenAnscihtModell
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToListAsync();
+
+            return View(rollen);
         }
         public IActionResult RolleErstellen()
         {
@@ -58,7 +65,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                 Name = anfrage.Name
             });
 
-            if (!resultat.Succeeded) 
+            if (!resultat.Succeeded)
             {
                 ModelState.AddModelStateFehlerListe(resultat.Errors);
                 return View();

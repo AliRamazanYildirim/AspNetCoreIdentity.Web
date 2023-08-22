@@ -1,8 +1,29 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
+@model List<AdminModell.AuflistungRollenAnscihtModell>
+<div class="col-md-6 offset-md-3">
 <h1>Rolle Erstellen</h1>
 <hr />
-<a class="btn btn-outline-success" asp-controller="Rollen" asp-action="RolleErstellen" asp-area="admin">Rolle erstellen</a>
+<a class="btn btn-outline-success float-end" asp-controller="Rollen" asp-action="RolleErstellen" asp-area="admin">Rolle erstellen</a>
 
+<h1>Liste der Rollen</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name der Rolle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
