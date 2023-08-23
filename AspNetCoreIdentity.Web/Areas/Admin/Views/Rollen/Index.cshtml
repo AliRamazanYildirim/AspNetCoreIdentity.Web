@@ -1,29 +1,33 @@
 ﻿@{
     ViewData["Title"] = "Index";
 }
-@model List<AdminModell.AuflistungRollenAnscihtModell>
+@model List<AdminModell.RollenAuflistenAnscihtModell>
 <div class="col-md-6 offset-md-3">
-<h1>Rolle Erstellen</h1>
-<hr />
-<a class="btn btn-outline-success float-end" asp-controller="Rollen" asp-action="RolleErstellen" asp-area="admin">Rolle erstellen</a>
+    <h1>Rolle Erstellen</h1>
+    <hr />
+    <a class="btn btn-outline-success float-end" asp-controller="Rollen" asp-action="RolleErstellen" asp-area="admin">Rolle erstellen</a>
 
-<h1>Liste der Rollen</h1>
+    <h1>Liste der Rollen</h1>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name der Rolle</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
+                <th scope="col">Id</th>
+                <th scope="col">Name der Rolle</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>
+                        <a class="btn btn-outline-success btn-sm" asp-area="admin" asp-controller="Rollen" asp-action="RolleAktualisieren" asp-route-id="@item.Id">Aktualisieren</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

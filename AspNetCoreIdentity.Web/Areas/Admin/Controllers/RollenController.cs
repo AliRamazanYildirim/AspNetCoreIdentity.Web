@@ -24,7 +24,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var rollen = await _roleManager.Roles.Select(x => new AuflistungRollenAnscihtModell
+            var rollen = await _roleManager.Roles.Select(x => new RollenAuflistenAnscihtModell
             {
                 Id = x.Id,
                 Name = x.Name
@@ -72,6 +72,28 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             }
 
             return RedirectToAction(nameof(RollenController.Index));
+        }
+
+        public async Task<IActionResult> RolleAktualisieren(string id)
+        {
+            var rolleAktualisieren = await _roleManager.FindByIdAsync(id);
+            return rolleAktualisieren == null
+                ? throw new Exception("Keine Rolle zu aktualisieren")
+                : (IActionResult)View(new RolleAktualisierenAnscihtModell()
+                {
+                    Id = rolleAktualisieren.Id,
+                    Name = rolleAktualisieren.Name
+                });
+        }
+        [HttpPost]
+        public async Task<IActionResult> RolleAktualisieren(RolleAktualisierenAnscihtModell anfrage)
+        {
+            var rolleAktualisieren = await _roleManager.FindByIdAsync(anfrage.Id!) ?? throw new Exception("Keine Rolle zu aktualisieren");
+            rolleAktualisieren.Name = anfrage.Name;
+            await _roleManager.UpdateAsync(rolleAktualisieren);
+            ViewData["ErfolgsNachricht"] = "Die Rolleninformationen wurden aktualisiert.";
+            return View();
+               
         }
     }
 }
