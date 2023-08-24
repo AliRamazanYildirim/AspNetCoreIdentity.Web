@@ -2,7 +2,13 @@
     ViewData["Title"] = "Index";
 }
 @model List<AdminModell.RollenAuflistenAnscihtModell>
-<div class="col-md-6 offset-md-3">
+<div class="col-md-8 offset-md-2">
+    @if (TempData["ErfolgsNachricht"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["ErfolgsNachricht"]
+        </div>
+    }
     <h1>Rolle Erstellen</h1>
     <hr />
     <a class="btn btn-outline-success float-end" asp-controller="Rollen" asp-action="RolleErstellen" asp-area="admin">Rolle erstellen</a>
@@ -25,6 +31,7 @@
                     <td>@item.Name</td>
                     <td>
                         <a class="btn btn-outline-success btn-sm" asp-area="admin" asp-controller="Rollen" asp-action="RolleAktualisieren" asp-route-id="@item.Id">Aktualisieren</a>
+                        <a class="btn btn-outline-danger btn-sm my-1" asp-area="admin" asp-controller="Rollen" asp-action="RolleLöschen" asp-route-id="@item.Id">Löschen</a>
                     </td>
                 </tr>
             }

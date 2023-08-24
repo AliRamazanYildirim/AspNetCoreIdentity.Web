@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using Microsoft.EntityFrameworkCore;
+using AspNetCoreIdentity.Web.Controllers;
 
 namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 {
@@ -71,7 +72,8 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                 return View();
             }
 
-            return RedirectToAction(nameof(RollenController.Index));
+            TempData["ErfolgsNachricht"] = "Die Rolleninformationen wurden erstellt.";
+            return RedirectToAction(nameof(MitgliedController.Index));
         }
 
         public async Task<IActionResult> RolleAktualisieren(string id)
@@ -94,6 +96,18 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             ViewData["ErfolgsNachricht"] = "Die Rolleninformationen wurden aktualisiert.";
             return View();
                
+        }
+        public async Task<IActionResult> RolleLöschen(string id)
+        {
+            var rolleLöschen = await _roleManager.FindByIdAsync(id) ?? throw new Exception("Keine Rolle zu löshen");
+            var resultat = await _roleManager.DeleteAsync(rolleLöschen);
+
+            if(!resultat.Succeeded)
+            {
+                ModelState.AddModelError(String.Empty, "Keine Rolle wurde gefunden");
+            }
+            TempData["ErfolgsNachricht"] = "Die Rolleninformationen wurden gelöscht.";
+            return RedirectToAction(nameof(MitgliedController.Index));
         }
     }
 }
