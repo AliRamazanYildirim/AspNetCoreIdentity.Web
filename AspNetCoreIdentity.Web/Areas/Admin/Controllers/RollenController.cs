@@ -109,5 +109,28 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             TempData["ErfolgsNachricht"] = "Die Rolleninformationen wurden gelöscht.";
             return RedirectToAction(nameof(MitgliedController.Index));
         }
+        public async Task<IActionResult> RolleZuweisen(string id)
+        {
+            var aktuellerBenutzer = await _userManager.FindByIdAsync(id);
+            var rollen = await _roleManager.Roles.ToListAsync();
+            var rollenAnscihtModellList = new List<RollenZuweisenAnscihtModell>();
+            var benutzerRollen = await _userManager.GetRolesAsync(aktuellerBenutzer!);
+
+            foreach(var rolle in rollen)
+            {
+                var rollenZuweisenAnscihtModell = new RollenZuweisenAnscihtModell()
+                {
+                    Id = rolle.Id,
+                    Name = rolle.Name
+                };
+
+                if(benutzerRollen.Contains(rolle.Name!))
+                {
+                    rollenZuweisenAnscihtModell.Existiert = true;
+                }
+                rollenAnscihtModellList.Add(rollenZuweisenAnscihtModell);
+            }
+            return View(rollenAnscihtModellList);
+        }
     }
 }
