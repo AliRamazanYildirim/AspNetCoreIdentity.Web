@@ -112,6 +112,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RolleZuweisen(string id)
         {
             var aktuellerBenutzer = await _userManager.FindByIdAsync(id);
+            ViewBag.benutzerID = id;
             var rollen = await _roleManager.Roles.ToListAsync();
             var rollenAnscihtModellList = new List<RollenZuweisenAnscihtModell>();
             var benutzerRollen = await _userManager.GetRolesAsync(aktuellerBenutzer!);
@@ -131,6 +132,21 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                 rollenAnscihtModellList.Add(rollenZuweisenAnscihtModell);
             }
             return View(rollenAnscihtModellList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RolleZuweisen(string benutzerID, List<RollenZuweisenAnscihtModell> anfrage)
+        {
+            var benutzerFürRolleZuweisen = await _userManager.FindByIdAsync(benutzerID)!;
+            foreach(var rolle in anfrage)
+            {
+                if (rolle.Existiert)
+                {
+                    await _userManager.AddToRoleAsync(benutzerFürRolleZuweisen!, rolle.Name!);
+                }
+                else
+                    await _userManager.RemoveFromRoleAsync(benutzerFürRolleZuweisen!, rolle.Name!);
+            }
+            return RedirectToAction(nameof(HomeController.BenutzerListe), "Home");
         }
     }
 }
