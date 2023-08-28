@@ -21,17 +21,21 @@ namespace AspNetCoreIdentity.Web.Dienste
             {
                 throw new InvalidOperationException("Die E-Mail-Einstellungen fehlen oder sind ungültig.");
             }
-            var smtpClient = new SmtpClient();
+            var smtpClient = new SmtpClient
+            {
+                Host = _emailEinstellungen.Host,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Port = 587,
+                Credentials = new NetworkCredential(_emailEinstellungen.Email, _emailEinstellungen.Passwort),
+                EnableSsl = true
+            };
 
-            smtpClient.Host = _emailEinstellungen.Host;
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Port = 587;
-            smtpClient.Credentials = new NetworkCredential(_emailEinstellungen.Email, _emailEinstellungen.Passwort);
-            smtpClient.EnableSsl = true;
+            var mailNachricht = new MailMessage
+            {
+                From = new MailAddress(_emailEinstellungen.Email)
+            };
 
-            var mailNachricht = new MailMessage();
-            mailNachricht.From = new MailAddress(_emailEinstellungen.Email);
             if (ZurEmail != null)
             {
                 mailNachricht.To.Add(ZurEmail);
