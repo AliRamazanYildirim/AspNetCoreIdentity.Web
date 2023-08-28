@@ -11,6 +11,7 @@
             <th scope="col">Id</th>
             <th scope="col">Benutzername</th>
             <th scope="col">Benutzer-email</th>
+            <th scope="col">Rollen</th>
             <th scope="col">Rolle Operationen</th>
         </tr>
     </thead>
@@ -21,6 +22,9 @@
                 <td>@item.BenutzerID</td>
                 <td>@item.BenutzerName</td>
                 <td>@item.BenutzerEmail</td>
+                <td>
+                    <benutzer-rolle benutzer-id="@item.BenutzerID"></benutzer-rolle>
+                    </td>
                 <td>
                     <a asp-controller="Rollen" asp-action="RolleZuweisen" asp-route-id="@item.BenutzerID">Rolle Operationen</a>
                 </td>
