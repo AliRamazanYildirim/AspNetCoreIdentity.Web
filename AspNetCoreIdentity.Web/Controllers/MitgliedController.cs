@@ -51,6 +51,7 @@ namespace AspNetCoreIdentity.Web.Controllers
         {            
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> PasswortÄnderung(PasswortÄndernAnsichtsModell anfrage)
         {
@@ -97,6 +98,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich geändert.";
             return View();
         }
+
         public async Task<IActionResult> BenutzerBearbeiten()
         {
             ViewBag.geschlecht = new SelectList(Enum.GetNames(typeof(Geschlecht)));
@@ -114,6 +116,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             };
             return View(benutzerAnscihtModell);
         }
+
         [HttpPost]
         public async Task<IActionResult> BenutzerBearbeiten(BenutzerBearbeitenAnsichtModell anfrage)
         {
@@ -178,6 +181,15 @@ namespace AspNetCoreIdentity.Web.Controllers
             };
 
             return View(benutzerAnscihtModell);
+        }
+
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            string nachricht = string.Empty;
+            nachricht = @"Sie sind nicht berechtigt, diese Seite anzusehen. 
+                        Bitte wenden Sie sich an den Seitenadministrator, um eine Genehmigung zu erhalten.";
+            ViewBag.nachricht = nachricht;
+            return View();
         }
     }
 }

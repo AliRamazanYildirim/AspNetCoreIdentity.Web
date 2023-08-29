@@ -6,6 +6,7 @@ using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreIdentity.Web.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 {
@@ -23,6 +24,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             _validator = validator;
         }
 
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Index()
         {
             var rollen = await _roleManager.Roles.Select(x => new RollenAuflistenAnscihtModell
@@ -33,10 +35,14 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 
             return View(rollen);
         }
+
+        [Authorize(Roles = "admin")]
         public IActionResult RolleErstellen()
         {
             return View();
         }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> RolleErstellen(RolleErstellenAnsichtModell anfrage)
         {
@@ -76,6 +82,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(MitgliedController.Index));
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RolleAktualisieren(string id)
         {
             var rolleAktualisieren = await _roleManager.FindByIdAsync(id);
@@ -87,6 +94,8 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                     Name = rolleAktualisieren.Name
                 });
         }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> RolleAktualisieren(RolleAktualisierenAnscihtModell anfrage)
         {
@@ -97,6 +106,8 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             return View();
                
         }
+
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RolleLöschen(string id)
         {
             var rolleLöschen = await _roleManager.FindByIdAsync(id) ?? throw new Exception("Keine Rolle zu löshen");
@@ -109,6 +120,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             TempData["ErfolgsNachricht"] = "Die Rolleninformationen wurden gelöscht.";
             return RedirectToAction(nameof(MitgliedController.Index));
         }
+
         public async Task<IActionResult> RolleZuweisen(string id)
         {
             var aktuellerBenutzer = await _userManager.FindByIdAsync(id);
@@ -133,6 +145,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             }
             return View(rollenAnscihtModellList);
         }
+
         [HttpPost]
         public async Task<IActionResult> RolleZuweisen(string benutzerID, List<RollenZuweisenAnscihtModell> anfrage)
         {
