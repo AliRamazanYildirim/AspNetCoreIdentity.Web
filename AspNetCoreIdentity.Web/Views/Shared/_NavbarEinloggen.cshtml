@@ -1,4 +1,5 @@
-﻿@if (User.Identity != null && User.Identity.IsAuthenticated)
+﻿@using System.Security.Claims;
+@if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <ul class="navbar-nav me-0">
         <li class="nav-item dropdown">
@@ -6,6 +7,14 @@
                 @User.Identity.Name
             </a>
             <ul class="dropdown-menu">
+                @if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "Admin"))
+                {
+                    <li><a class="dropdown-item" asp-area="admin" asp-controller="Home" asp-action="Index">
+                            <i class="fa-solid fa-head-side-virus float-end"></i>
+                            Admin
+                        </a>
+                    </li>
+                }
                 <li><a class="dropdown-item" asp-controller="Mitglied" asp-action="Index">Profil</a></li>
                 <li><a class="dropdown-item" asp-controller="Mitglied" asp-action="PasswortÄnderung">Passwort ändern</a></li>
                 <li><a class="dropdown-item" asp-controller="Mitglied" asp-action="BenutzerBearbeiten">Profil aktualisieren</a></li>
