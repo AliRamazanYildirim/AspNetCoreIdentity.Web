@@ -185,8 +185,7 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         public IActionResult AccessDenied(string ReturnUrl)
         {
-            string nachricht = string.Empty;
-            nachricht = @"Sie sind nicht berechtigt, diese Seite anzusehen. 
+            string nachricht = @"Sie sind nicht berechtigt, diese Seite anzusehen. 
                         Bitte wenden Sie sich an den Seitenadministrator, um eine Genehmigung zu erhalten.";
             ViewBag.nachricht = nachricht;
             return View();

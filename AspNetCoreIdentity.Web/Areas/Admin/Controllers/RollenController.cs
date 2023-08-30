@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class RollenController : Controller
     {
@@ -23,8 +24,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             _roleManager = roleManager;
             _validator = validator;
         }
-
-        [Authorize(Roles ="admin")]
+ 
         public async Task<IActionResult> Index()
         {
             var rollen = await _roleManager.Roles.Select(x => new RollenAuflistenAnscihtModell
@@ -36,13 +36,11 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             return View(rollen);
         }
 
-        [Authorize(Roles = "admin")]
         public IActionResult RolleErstellen()
         {
             return View();
         }
 
-        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> RolleErstellen(RolleErstellenAnsichtModell anfrage)
         {
@@ -82,7 +80,6 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(MitgliedController.Index));
         }
 
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RolleAktualisieren(string id)
         {
             var rolleAktualisieren = await _roleManager.FindByIdAsync(id);
@@ -95,7 +92,6 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                 });
         }
 
-        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> RolleAktualisieren(RolleAktualisierenAnscihtModell anfrage)
         {
@@ -107,7 +103,6 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                
         }
 
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RolleLöschen(string id)
         {
             var rolleLöschen = await _roleManager.FindByIdAsync(id) ?? throw new Exception("Keine Rolle zu löshen");
