@@ -7,7 +7,7 @@
 
 <table class="table table-striped">
     <thead>
-        <tr>
+        <tr class="text-center">
             <th scope="col">Id</th>
             <th scope="col">Benutzername</th>
             <th scope="col">Benutzer-email</th>
@@ -18,7 +18,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>               
+            <tr class="text-center">
                 <td>@item.BenutzerID</td>
                 <td>@item.BenutzerName</td>
                 <td>@item.BenutzerEmail</td>
