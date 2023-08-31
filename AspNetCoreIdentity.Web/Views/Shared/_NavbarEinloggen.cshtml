@@ -10,7 +10,7 @@
                 @if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "Admin"))
                 {
                     <li><a class="dropdown-item" asp-area="admin" asp-controller="Home" asp-action="Index">
-                            <i class="fa-solid fa-user-secret float-end"></i>
+                            <i class="fa-solid fa-user-secret fa-beat float-end"></i>
                             Admin
                         </a>
                     </li>
