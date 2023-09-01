@@ -32,11 +32,14 @@
                     <td>@item.Id</td>
                     <td>@item.Name</td>
                     <td>
-                        <a class="btn btn-outline-success btn-sm" asp-area="admin" asp-controller="Rollen" asp-action="RolleAktualisieren" asp-route-id="@item.Id">
-                            <i class="fa-solid fa-pencil"></i> Aktualisieren
-                        </a>
-                        <a class="btn btn-outline-danger btn-sm my-1" asp-area="admin" asp-controller="Rollen" asp-action="RolleLöschen" asp-route-id="@item.Id">
-                            <i class="fa-regular fa-trash-can"></i> Löschen</a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a class="btn btn-outline-success btn-sm" asp-area="admin" asp-controller="Rollen" asp-action="RolleAktualisieren" asp-route-id="@item.Id">
+                                <i class="fa-solid fa-pencil"></i> Aktualisieren
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm" asp-area="admin" asp-controller="Rollen" asp-action="RolleLöschen" asp-route-id="@item.Id">
+                                <i class="fa-regular fa-trash-can"></i> Löschen
+                            </a>
+                        </div>
                     </td>
                 </tr>
             }
