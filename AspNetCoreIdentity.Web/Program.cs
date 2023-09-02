@@ -23,7 +23,8 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 
 builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection("EmailEinstellungen"));
 builder.Services.AddIdentityMitErweiterung();
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.ConfigureApplicationCookie(conf =>
 {

@@ -11,7 +11,7 @@
                 {
                     <li><a class="dropdown-item" asp-area="admin" asp-controller="Home" asp-action="Index">
                             <i class="fa-solid fa-user-secret fa-beat float-end"></i>
-                            Admin
+                            @User.Identity.Name
                         </a>
                     </li>
                 }

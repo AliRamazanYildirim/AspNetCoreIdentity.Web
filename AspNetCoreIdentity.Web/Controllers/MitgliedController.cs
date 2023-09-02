@@ -19,18 +19,23 @@ namespace AspNetCoreIdentity.Web.Controllers
         private readonly PasswortÄndernValidator _validation;
         private readonly BenutzerBearbeitenValidator _validator;
         private readonly IFileProvider _fileProvider;
+        private readonly IHttpContextAccessor _accessor;
 
-        public MitgliedController(SignInManager<AppBenutzer> signInManager, UserManager<AppBenutzer> userManager, PasswortÄndernValidator validation, BenutzerBearbeitenValidator validator, IFileProvider fileProvider)
+        public MitgliedController(SignInManager<AppBenutzer> signInManager, UserManager<AppBenutzer> userManager,
+            PasswortÄndernValidator validation, BenutzerBearbeitenValidator validator, IFileProvider fileProvider,
+            IHttpContextAccessor accessor)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _validation = validation;
             _validator = validator;
             _fileProvider = fileProvider;
+            _accessor = accessor;
         }
 
         public async Task<IActionResult> Index()
         {
+            var benutzerClaims = _accessor.HttpContext!.User.Claims.ToList();
             var aktuellerBenutzer = (await _userManager.FindByNameAsync(User.Identity!.Name!))!;
 
             var benutzerAnsichtModell = new BenutzerAnsichtModell
