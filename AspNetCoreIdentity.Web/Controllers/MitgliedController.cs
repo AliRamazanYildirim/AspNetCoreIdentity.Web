@@ -195,5 +195,17 @@ namespace AspNetCoreIdentity.Web.Controllers
             ViewBag.nachricht = nachricht;
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Claims()
+        {
+            var benutzerClaimsListe = _accessor.HttpContext!.User.Claims.Select(x => new ClaimAnsichtModell
+            {
+                Anbieter = x.Issuer,
+                Typ = x.Type,
+                Wert = x.Value
+            }).ToList();
+            return View(benutzerClaimsListe);
+        }
     }
 }
