@@ -1,10 +1,12 @@
 using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Web.ClaimProviders;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
 using AspNetCoreIdentity.Web.OptionModell;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +26,7 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection("EmailEinstellungen"));
 builder.Services.AddIdentityMitErweiterung();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 
 builder.Services.ConfigureApplicationCookie(conf =>
 {

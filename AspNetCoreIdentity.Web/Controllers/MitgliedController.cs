@@ -197,7 +197,7 @@ namespace AspNetCoreIdentity.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Claims()
+        public IActionResult Claims()
         {
             var benutzerClaimsListe = _accessor.HttpContext!.User.Claims.Select(x => new ClaimAnsichtModell
             {
