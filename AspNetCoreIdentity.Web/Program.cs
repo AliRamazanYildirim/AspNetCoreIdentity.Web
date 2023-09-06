@@ -27,7 +27,13 @@ builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection(
 builder.Services.AddIdentityMitErweiterung();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
-
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("AdminStadtPolicy", policy =>
+    {
+        policy.RequireClaim("stadt", "Frankfurt");
+    });
+});
 builder.Services.ConfigureApplicationCookie(conf =>
 {
     var cookieBuilder = new CookieBuilder

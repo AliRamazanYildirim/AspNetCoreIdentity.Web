@@ -207,5 +207,12 @@ namespace AspNetCoreIdentity.Web.Controllers
             }).ToList();
             return View(benutzerClaimsListe);
         }
+
+        [Authorize(Policy = "AdminStadtPolicy")]
+        [HttpGet]
+        public IActionResult AdminStadtPolicySeite()
+        {
+            return View();
+        }
     }
 }

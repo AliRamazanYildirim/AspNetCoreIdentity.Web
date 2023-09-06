@@ -23,7 +23,7 @@ namespace AspNetCoreIdentity.Web.ClaimProviders
             {
                 return principal;
             }
-            if (principal.HasClaim(x => x.Type != "city"))
+            if (principal.HasClaim(x => x.Type != "stadt"))
             {
                 Claim claim = new("stadt", aktuellerBenutzer!.Stadt!);
                 identitaet.AddClaim(claim);
