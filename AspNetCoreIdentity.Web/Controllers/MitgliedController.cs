@@ -190,6 +190,11 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         public IActionResult AccessDenied(string ReturnUrl)
         {
+            if (string.IsNullOrEmpty(ReturnUrl))
+            {
+                throw new ArgumentException($"\"{nameof(ReturnUrl)}\" kann nicht NULL oder leer sein.", nameof(ReturnUrl));
+            }
+
             string nachricht = @"Sie sind nicht berechtigt, diese Seite anzusehen. 
                         Bitte wenden Sie sich an den Seitenadministrator, um eine Genehmigung zu erhalten.";
             ViewBag.nachricht = nachricht;
