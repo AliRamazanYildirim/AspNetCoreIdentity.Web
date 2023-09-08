@@ -8,6 +8,7 @@ using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.Dienste;
 using AspNetCoreIdentity.Web.OptionModell;
 using NuGet.Common;
+using System.Security.Claims;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {
@@ -39,10 +40,12 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             return View();
         }
+
         public IActionResult Anmelden()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Anmelden(AnmeldenAnsichtModell anfrage)
         {
@@ -70,21 +73,32 @@ namespace AspNetCoreIdentity.Web.Controllers
                 Email = anfrage.Email
             }, anfrage.PasswortBestätigen ?? "");
 
-            if (identityResultat.Succeeded)
+            if (!identityResultat.Succeeded)
             {
-                TempData["ErfolgsNachricht"] = "Der Mitgliedschaftsprozess war erfolgreich.";
-                return RedirectToAction(nameof(HomeController.Anmelden));
+                ModelState.AddModelStateFehlerListe(identityResultat.Errors.Select(x => x.Description).ToList());
+                return View();
             }
+            var umtauschClaim = new Claim("AblaufDatumDesUmtauschs", DateTime.Now.AddDays(1).ToString());
+            var aktuallerBenutzer = await _userManager.FindByNameAsync(anfrage.BenutzerName!);
 
-            ModelState.AddModelStateFehlerListe(identityResultat.Errors.Select(x => x.Description).ToList());
+            var claimResultat = await _userManager.AddClaimAsync(aktuallerBenutzer!, umtauschClaim);
+            if (!claimResultat.Succeeded)
+            {
+                ModelState.AddModelStateFehlerListe(claimResultat.Errors.Select(x => x.Description).ToList());
+                return View();
+            }
+            TempData["ErfolgsNachricht"] = "Der Mitgliedschaftsprozess war erfolgreich.";
+            return RedirectToAction(nameof(HomeController.Anmelden));
 
-            return View();
+
         }
+
         public IActionResult Einloggen()
         {
 
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Einloggen(EinloggenAnsichtModell anfrage, string? returnUrl = null)
         {
@@ -155,10 +169,12 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             return View();
         }
+
         public IActionResult PasswortVergessen()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> PasswortVergessen(PasswortVergessenAnsichtModell anfrage)
         {
@@ -169,7 +185,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             }
             var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email);
 
-            if (gibtsBenutzer == null) 
+            if (gibtsBenutzer == null)
             {
                 ModelState.AddModelError(String.Empty, "Es wurde kein Benutzer mit dieser E-Mail-Adresse gefunden.");
                 return View();
@@ -187,6 +203,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             TempData["ErfolgsNachricht"] = "Der Link zur Erneuerung des Passworts wurde an Ihre E-Mail-Adresse gesendet.";
             return RedirectToAction(nameof(PasswortVergessen));
         }
+
         public IActionResult PasswortZurücksetzen(string? userId, string? token)
         {
             TempData["userId"] = userId;
@@ -194,6 +211,7 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> PasswortZurücksetzen(PasswortZurücksetzenAnsichtModell anfrage)
         {
@@ -215,7 +233,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             }
 
             var resultat = await _userManager.ResetPasswordAsync(gibtsBenutzer, token, anfrage.Passwort);
-            if(resultat.Succeeded)
+            if (resultat.Succeeded)
             {
                 TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich erneuert.";
             }
