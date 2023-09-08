@@ -35,7 +35,7 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var benutzerClaims = _accessor.HttpContext!.User.Claims.ToList();
+            _ = _accessor.HttpContext!.User.Claims.ToList();
             var aktuellerBenutzer = (await _userManager.FindByNameAsync(User.Identity!.Name!))!;
 
             var benutzerAnsichtModell = new BenutzerAnsichtModell
