@@ -1,12 +1,17 @@
 ﻿using AspNetCoreIdentity.Web.AnsichtModelle;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
+using AspNetCoreIdentity.Web.ClaimProviders;
 using AspNetCoreIdentity.Web.Dienste;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
 using AspNetCoreIdentity.Web.Models;
+using AspNetCoreIdentity.Web.OptionModell;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.Configuration;
 
 namespace AspNetCoreIdentity.Web.Erweiterungen
 {
@@ -53,7 +58,29 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             services.AddValidatorsFromAssemblyContaining<RolleValidator>();
 
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
-        }
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("AdminStadtPolicy", policy =>
+                {
+                    policy.RequireClaim("stadt", "Frankfurt");
+                });
+            });
+            services.ConfigureApplicationCookie(conf =>
+            {
+                var cookieBuilder = new CookieBuilder
+                {
+                    Name = "IdentityCookie"
+                };
+                conf.LoginPath = new PathString("/Home/Einloggen");
+                conf.LogoutPath = new PathString("/Mitglied/Ausloggen");
+                conf.AccessDeniedPath = new PathString("/Mitglied/AccessDenied");
+                conf.Cookie = cookieBuilder;
+                conf.ExpireTimeSpan = TimeSpan.FromDays(30);
+                conf.SlidingExpiration = true;
+            });
+        }
     }
 }

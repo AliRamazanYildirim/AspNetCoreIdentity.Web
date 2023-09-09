@@ -1,16 +1,7 @@
-using AspNetCoreIdentity.Web.AnsichtModelle;
-using AspNetCoreIdentity.Web.ClaimProviders;
 using AspNetCoreIdentity.Web.Erweiterungen;
-using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Models;
 using AspNetCoreIdentity.Web.OptionModell;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,28 +16,6 @@ builder.Services.AddDbContext<AppDbKontext>(options =>
 
 builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection("EmailEinstellungen"));
 builder.Services.AddIdentityMitErweiterung();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
-builder.Services.AddAuthorization(opt =>
-{
-    opt.AddPolicy("AdminStadtPolicy", policy =>
-    {
-        policy.RequireClaim("stadt", "Frankfurt");
-    });
-});
-builder.Services.ConfigureApplicationCookie(conf =>
-{
-    var cookieBuilder = new CookieBuilder
-    {
-        Name = "IdentityCookie"
-    };
-    conf.LoginPath = new PathString("/Home/Einloggen");
-    conf.LogoutPath = new PathString("/Mitglied/Ausloggen");
-    conf.AccessDeniedPath = new PathString("/Mitglied/AccessDenied");
-    conf.Cookie = cookieBuilder;
-    conf.ExpireTimeSpan = TimeSpan.FromDays(30);
-    conf.SlidingExpiration = true;
-});
 
 var app = builder.Build();
 
