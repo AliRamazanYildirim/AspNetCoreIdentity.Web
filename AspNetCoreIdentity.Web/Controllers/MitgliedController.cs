@@ -219,5 +219,12 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             return View();
         }
+
+        [Authorize(Policy = "UmtauschPolicy")]
+        [HttpGet]
+        public IActionResult UmtauschPolicySeite()
+        {
+            return View();
+        }
     }
 }

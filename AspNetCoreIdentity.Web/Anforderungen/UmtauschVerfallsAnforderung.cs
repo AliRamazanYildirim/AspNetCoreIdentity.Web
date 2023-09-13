@@ -11,7 +11,7 @@ namespace AspNetCoreIdentity.Web.Anforderungen
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UmtauschVerfallsAnforderung requirement)
         {
-            if(context.User.HasClaim(x => x.Type == "AblaufDatumDesUmtauschs"))
+            if(!context.User.HasClaim(x => x.Type == "AblaufDatumDesUmtauschs"))
             {
                 context.Fail();
                 return Task.CompletedTask;

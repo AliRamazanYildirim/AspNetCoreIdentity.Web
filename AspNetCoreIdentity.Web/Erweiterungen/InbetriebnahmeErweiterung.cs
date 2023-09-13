@@ -1,4 +1,5 @@
-﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+﻿using AspNetCoreIdentity.Web.Anforderungen;
+using AspNetCoreIdentity.Web.AnsichtModelle;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using AspNetCoreIdentity.Web.ClaimProviders;
 using AspNetCoreIdentity.Web.Dienste;
@@ -8,6 +9,7 @@ using AspNetCoreIdentity.Web.Models;
 using AspNetCoreIdentity.Web.OptionModell;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -61,11 +63,16 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
 
             services.AddHttpContextAccessor();
             services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+            services.AddScoped<IAuthorizationHandler, UmtauschVerfallsAnforderungHandler>();
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("AdminStadtPolicy", policy =>
                 {
                     policy.RequireClaim("stadt", "Frankfurt");
+                });
+                opt.AddPolicy("UmtauschPolicy", policy =>
+                {
+                    policy.AddRequirements(new UmtauschVerfallsAnforderung());
                 });
             });
             services.ConfigureApplicationCookie(conf =>
