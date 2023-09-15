@@ -157,7 +157,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             {
                 await _signInManager.SignInWithClaimsAsync(gibtsBenutzer, anfrage.ErrinnereMich, new[]
                 {
-                        new Claim("geburtsdatum",gibtsBenutzer.Geburtsdatum.Value.ToString())
+                        new Claim("Geburtsdatum",gibtsBenutzer.Geburtsdatum.Value.ToString())
                 });
             }
             return Redirect(returnUrl!);

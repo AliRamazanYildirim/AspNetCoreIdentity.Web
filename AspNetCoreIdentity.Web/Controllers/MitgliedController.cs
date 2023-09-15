@@ -176,7 +176,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             {
                 await _signInManager.SignInWithClaimsAsync(aktuellerBenutzer, true, new[]
                 {
-                        new Claim("geburtsdatum",aktuellerBenutzer.Geburtsdatum!.Value.ToString())
+                        new Claim("Geburtsdatum",aktuellerBenutzer.Geburtsdatum!.Value.ToString())
                 });
             }
             else
