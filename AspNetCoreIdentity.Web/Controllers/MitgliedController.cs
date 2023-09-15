@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace AspNetCoreIdentity.Web.Controllers
@@ -53,14 +54,14 @@ namespace AspNetCoreIdentity.Web.Controllers
             await _signInManager.SignOutAsync();
         }
         public IActionResult PasswortÄnderung()
-        {            
+        {
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> PasswortÄnderung(PasswortÄndernAnsichtsModell anfrage)
         {
-            var validationResultat =await _validation.ValidateAsync(anfrage);
+            var validationResultat = await _validation.ValidateAsync(anfrage);
 
             if (!validationResultat.IsValid)
             {
@@ -83,7 +84,7 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            var altesPasswortPrüfen =await _userManager.CheckPasswordAsync(aktuellerBenutzer, anfrage.AltesPasswort);
+            var altesPasswortPrüfen = await _userManager.CheckPasswordAsync(aktuellerBenutzer, anfrage.AltesPasswort);
             if (!altesPasswortPrüfen)
             {
                 ModelState.AddModelError(string.Empty, "Ihr altes Passwort ist falsch.");
@@ -151,7 +152,7 @@ namespace AspNetCoreIdentity.Web.Controllers
             aktuellerBenutzer.Stadt = anfrage.Stadt;
             aktuellerBenutzer.Geschlecht = anfrage.Geschlecht;
 
-            if (anfrage.Bild != null && anfrage.Bild.Length > 0) 
+            if (anfrage.Bild != null && anfrage.Bild.Length > 0)
             {
                 var bildWeg = _fileProvider.GetDirectoryContents("wwwroot");
                 var zufälligerDateiName = $"{Guid.NewGuid()}{Path.GetExtension(anfrage.Bild.FileName)}";
@@ -171,7 +172,16 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             await _userManager.UpdateSecurityStampAsync(aktuellerBenutzer);
             await _signInManager.SignOutAsync();
+            if(anfrage.Geburtsdatum.HasValue)
+            {
+                await _signInManager.SignInWithClaimsAsync(aktuellerBenutzer, true, new[]
+                {
+                        new Claim("geburtsdatum",aktuellerBenutzer.Geburtsdatum!.Value.ToString())
+                });
+            }
+            else
             await _signInManager.SignInAsync(aktuellerBenutzer, true);
+            
 
             TempData["ErfolgsNachricht"] = "Die Mitgliederinformationen wurden erfolgreich geändert.";
 

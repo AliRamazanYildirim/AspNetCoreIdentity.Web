@@ -121,53 +121,46 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             returnUrl ??= Url.Action("Index", "Home");
 
-            if (anfrage.Email != null && anfrage.Passwort != null)
+            var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email!);
+
+            if (gibtsBenutzer == null)
             {
-                var gibtsBenutzer = await _userManager.FindByEmailAsync(anfrage.Email);
+                ModelState.AddModelError(string.Empty, "Email und Passwort stimmen nicht überein.");
+                return View();
+            }
 
-                if (gibtsBenutzer == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Email und Passwort stimmen nicht überein.");
-                    return View();
-                }
+            var einloggenResultat = await _signInManager.PasswordSignInAsync(gibtsBenutzer, anfrage.Passwort!,
+                anfrage.ErrinnereMich, true);
 
-                var einloggenResultat = await _signInManager.PasswordSignInAsync(gibtsBenutzer, anfrage.Passwort,
-                    anfrage.ErrinnereMich, true);
-
-                if (einloggenResultat.Succeeded)
-                {
-                    // Null-Check für returnUrl vor Verwendung in Redirect
-                    if (returnUrl != null)
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    // Behandlung des Falls, dass returnUrl null ist
-                    else
-                    {
-                        // Umleitung zu einer Standardaktion, wenn returnUrl null ist
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-
-                if (einloggenResultat.IsLockedOut)
-                {
-                    ModelState.AddModelStateFehlerListe(new List<string>()
+            if (einloggenResultat.IsLockedOut)
+            {
+                ModelState.AddModelStateFehlerListe(new List<string>()
                     {
                         "Sie können erst nach 3 Minuten eintreten."
 
                     });
-                    return View();
+                return View();
 
-                }
-
-                ModelState.AddModelStateFehlerListe(new List<string>()
-                {
-                     "Email und Passwort stimmen nicht überein.",
-                     $"Anzahl der erfolglosen Einträge {await _userManager.GetAccessFailedCountAsync(gibtsBenutzer)}"
-                });
             }
 
-            return View();
+            if (!einloggenResultat.Succeeded)
+            {
+                ModelState.AddModelStateFehlerListe(new List<string>()
+                    {
+                        "Email und Passwort stimmen nicht überein.",
+                        $"Anzahl der erfolglosen Einträge {await _userManager.GetAccessFailedCountAsync(gibtsBenutzer)}"
+                    });
+                return View();
+            }
+
+            if (gibtsBenutzer.Geburtsdatum.HasValue)
+            {
+                await _signInManager.SignInWithClaimsAsync(gibtsBenutzer, anfrage.ErrinnereMich, new[]
+                {
+                        new Claim("geburtsdatum",gibtsBenutzer.Geburtsdatum.Value.ToString())
+                });
+            }
+            return Redirect(returnUrl!);
         }
 
         public IActionResult PasswortVergessen()
