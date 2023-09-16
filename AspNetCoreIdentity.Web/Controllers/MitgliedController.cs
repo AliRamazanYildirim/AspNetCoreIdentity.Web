@@ -236,5 +236,12 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             return View();
         }
+
+        [Authorize(Policy = "GewaltPolicy")]
+        [HttpGet]
+        public IActionResult GewaltPolicySeite()
+        {
+            return View();
+        }
     }
 }

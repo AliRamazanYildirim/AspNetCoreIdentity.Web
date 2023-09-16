@@ -64,6 +64,8 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             services.AddHttpContextAccessor();
             services.AddScoped<IClaimsTransformation, UserClaimProvider>();
             services.AddScoped<IAuthorizationHandler, UmtauschVerfallsAnforderungHandler>();
+            services.AddScoped<IAuthorizationHandler, GewaltAnforderungHandler>();
+
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("AdminStadtPolicy", policy =>
@@ -73,6 +75,13 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                 opt.AddPolicy("UmtauschPolicy", policy =>
                 {
                     policy.AddRequirements(new UmtauschVerfallsAnforderung());
+                });
+                opt.AddPolicy("GewaltPolicy", policy =>
+                {
+                    policy.AddRequirements(new GewaltAnforderung()
+                    {
+                        Alter = 18
+                    });
                 });
             });
             services.ConfigureApplicationCookie(conf =>
