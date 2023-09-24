@@ -1,6 +1,8 @@
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.Models;
 using AspNetCoreIdentity.Web.OptionModell;
+using AspNetCoreIdentity.Web.SamenDaten;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,12 @@ builder.Services.Configure<EmailEinstellungen>(builder.Configuration.GetSection(
 builder.Services.AddIdentityMitErweiterung();
 
 var app = builder.Build();
+
+using(var scope=app.Services.CreateAsyncScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRolle>>();
+    await BerechtigungSamenDaten.Samen(roleManager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
