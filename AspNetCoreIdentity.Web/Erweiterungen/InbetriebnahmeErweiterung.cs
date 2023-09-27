@@ -83,6 +83,12 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                         Alter = 18
                     });
                 });
+                opt.AddPolicy("BestellungBerechtigungLesenOderLöschenPolicy", policy =>
+                {
+                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
+                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Löschen);
+                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
+                });
             });
             services.ConfigureApplicationCookie(conf =>
             {
