@@ -89,6 +89,18 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                     policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Löschen);
                     policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
                 });
+                opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Bestellung.Lesen", policy =>
+                {
+                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
+                });
+                opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Bestellung.Löschen", policy =>
+                {
+                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Löschen);
+                });
+                opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Vorrat.Löschen", policy =>
+                {
+                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
+                });
             });
             services.ConfigureApplicationCookie(conf =>
             {

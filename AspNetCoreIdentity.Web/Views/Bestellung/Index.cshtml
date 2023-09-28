@@ -1,9 +1,41 @@
-﻿
+﻿@using Microsoft.AspNetCore.Authorization;
+
 @{
     ViewData["Title"] = "Index";
 }
+@inject IAuthorizationService authorizationService
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @if (authorizationService.AuthorizeAsync(User, "BerechtigungenRoot.Berechtigungen.Bestellung.Lesen").Result.Succeeded)
+            {
+                <th scope="row">1</th>
+                <td>BerechtigungenRoot.Berechtigungen.Bestellung.Lesen</td>
+                <td><a href="#" class="btn btn-outline-success">Lesen</a></td>
+            }   
+        </tr>
+        <tr>
+            @if (authorizationService.AuthorizeAsync(User, "BerechtigungenRoot.Berechtigungen.Bestellung.Löschen").Result.Succeeded)
+            {
+                <th scope="row">1</th>
+                <td>BerechtigungenRoot.Berechtigungen.Vorrat.Löschen</td>
+                <td><a href="#" class="btn btn-outline-danger">Löschen</a></td>
+            }
+        </tr>
+        <tr>
+            @if (authorizationService.AuthorizeAsync(User, "BerechtigungenRoot.Berechtigungen.Vorrat.Löschen").Result.Succeeded)
+            {
+                <th scope="row">1</th>
+                <td>BerechtigungenRoot.Berechtigungen.Katalog.Löschen</td>
+                <td><a href="#" class="btn btn-outline-danger">Löschen</a></td>
+            }
+        </tr>
+    </tbody>
+</table>
 
-<h1>
-    BerechtigungenRoot.Berechtigungen.Bestellung.Lesen, BerechtigungenRoot.Berechtigungen.Vorrat.Lesen, BerechtigungenRoot.Berechtigungen.Katalog.Lesen
-</h1>
 

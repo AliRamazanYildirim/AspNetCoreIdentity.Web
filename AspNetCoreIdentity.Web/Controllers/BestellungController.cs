@@ -5,7 +5,7 @@ namespace AspNetCoreIdentity.Web.Controllers
 {
     public class BestellungController : Controller
     {
-        [Authorize(Policy = "BestellungBerechtigungLesenOderLöschenPolicy")]
+        [Authorize(Policy = "BerechtigungenRoot.Berechtigungen.Bestellung.Lesen")]
         public IActionResult Index()
         {
             return View();
