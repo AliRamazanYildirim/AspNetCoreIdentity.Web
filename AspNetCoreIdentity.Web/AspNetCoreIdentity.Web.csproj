@@ -23,4 +23,8 @@
     <Folder Include="Areas\Admin\Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AspNetCoreIdentity.Service\AspNetCoreIdentity.Service.csproj" />
+  </ItemGroup>
+
 </Project>
