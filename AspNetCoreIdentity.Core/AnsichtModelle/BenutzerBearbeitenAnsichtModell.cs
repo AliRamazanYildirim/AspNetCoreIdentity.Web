@@ -1,6 +1,7 @@
-﻿using AspNetCoreIdentity.Web.Models;
+﻿using AspNetCoreIdentity.Core.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace AspNetCoreIdentity.Web.AnsichtModelle
+namespace AspNetCoreIdentity.Core.AnsichtModelle
 {
     public class BenutzerBearbeitenAnsichtModell
     {

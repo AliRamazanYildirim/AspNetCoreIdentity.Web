@@ -1,12 +1,12 @@
 ﻿using AspNetCoreIdentity.Web.Anforderungen;
-using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using AspNetCoreIdentity.Web.ClaimProviders;
 using AspNetCoreIdentity.Web.Dienste;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
 using AspNetCoreIdentity.Web.Models;
-using AspNetCoreIdentity.Web.OptionModell;
+using AspNetCoreIdentity.Core.OptionModell;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using System.Configuration;
+using AspNetCoreIdentity.Core.Models;
+using AspNetCoreIdentity.Core.FluentValidierer;
 
 namespace AspNetCoreIdentity.Web.Erweiterungen
 {
@@ -85,21 +87,21 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
                 });
                 opt.AddPolicy("BestellungBerechtigungLesenOderLöschenPolicy", policy =>
                 {
-                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
-                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Löschen);
-                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
+                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
+                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Katalog.Löschen);
+                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
                 });
                 opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Bestellung.Lesen", policy =>
                 {
-                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
+                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
                 });
                 opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Bestellung.Löschen", policy =>
                 {
-                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Löschen);
+                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Löschen);
                 });
                 opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Vorrat.Löschen", policy =>
                 {
-                    policy.RequireClaim("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
+                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
                 });
             });
             services.ConfigureApplicationCookie(conf =>

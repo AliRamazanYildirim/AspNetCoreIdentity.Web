@@ -7,6 +7,7 @@ using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreIdentity.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentity.Core.Models;
 
 namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 {

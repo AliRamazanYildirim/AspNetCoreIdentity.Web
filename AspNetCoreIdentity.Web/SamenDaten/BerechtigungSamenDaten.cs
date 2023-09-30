@@ -46,38 +46,38 @@ namespace AspNetCoreIdentity.Web.SamenDaten
 
             }
         }
-        public static async Task LesenBerechtigung(AppRolle appRolle,RoleManager<AppRolle> roleManager)
+        public static async Task LesenBerechtigung(AppRolle appRolle, RoleManager<AppRolle> roleManager)
         {
             await roleManager.AddClaimAsync(appRolle!, new Claim
-                    ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Lesen));
+                    ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Lesen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Lesen));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Lesen));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Katalog.Lesen));
         }
         public static async Task ErstellenUndAktualisierenBerechtigung(AppRolle appRolle, RoleManager<AppRolle> roleManager)
         {
             await roleManager.AddClaimAsync(appRolle!, new Claim
-                    ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Erstellen));
+                    ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Erstellen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Erstellen));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Erstellen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Erstellen));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Katalog.Erstellen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-                    ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Aktualisieren));
+                    ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Aktualisieren));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Aktualisieren));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Aktualisieren));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Aktualisieren));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Katalog.Aktualisieren));
         }
         public static async Task LöschenBerechtigung(AppRolle appRolle, RoleManager<AppRolle> roleManager)
         {
             await roleManager.AddClaimAsync(appRolle!, new Claim
-                    ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Vorrat.Löschen));
+                    ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Bestellung.Löschen));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Löschen));
             await roleManager.AddClaimAsync(appRolle!, new Claim
-               ("Berechtigungen", BerechtigungenRoot.Berechtigungen.Katalog.Löschen));
+               ("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Katalog.Löschen));
         }
     }
 }

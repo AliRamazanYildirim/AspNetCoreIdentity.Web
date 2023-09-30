@@ -1,4 +1,4 @@
-﻿namespace AspNetCoreIdentity.Web.BerechtigungenRoot
+﻿namespace AspNetCoreIdentity.Core.BerechtigungenRoot
 {
     public static class Berechtigungen
     {

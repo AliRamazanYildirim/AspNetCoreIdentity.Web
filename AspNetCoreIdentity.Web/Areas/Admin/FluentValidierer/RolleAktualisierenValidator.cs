@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+﻿using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Web.Areas.Admin.Models;
 using FluentValidation;
 

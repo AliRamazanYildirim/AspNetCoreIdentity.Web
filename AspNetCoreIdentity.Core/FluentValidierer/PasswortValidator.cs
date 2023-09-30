@@ -1,7 +1,7 @@
-﻿using AspNetCoreIdentity.Web.Models;
+﻿using AspNetCoreIdentity.Core.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace AspNetCoreIdentity.Web.FluentValidierer
+namespace AspNetCoreIdentity.Core.FluentValidierer
 {
     public class PasswortValidator : IPasswordValidator<AppBenutzer>
     {

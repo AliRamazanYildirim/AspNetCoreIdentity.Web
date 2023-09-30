@@ -1,4 +1,4 @@
-﻿namespace AspNetCoreIdentity.Web.AnsichtModelle
+﻿namespace AspNetCoreIdentity.Core.AnsichtModelle
 {
     public class AnmeldenAnsichtModell
     {

@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentity.Web.OptionModell;
+﻿using AspNetCoreIdentity.Core.OptionModell;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;

@@ -1,7 +1,7 @@
-﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+﻿using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.FluentValidierer;
-using AspNetCoreIdentity.Web.Models;
+using AspNetCoreIdentity.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using AspNetCoreIdentity.Web.Models;
+using AspNetCoreIdentity.Core.FluentValidierer;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {

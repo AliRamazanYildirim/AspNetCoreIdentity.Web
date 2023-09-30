@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AspNetCoreIdentity.Core.Models;
+using Microsoft.AspNetCore.Identity;
 
-namespace AspNetCoreIdentity.Web.Models
+namespace AspNetCoreIdentity.Core.Models
 {
     public class AppBenutzer:IdentityUser
     {

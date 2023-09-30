@@ -1,4 +1,4 @@
-﻿namespace AspNetCoreIdentity.Web.Models
+﻿namespace AspNetCoreIdentity.Core.Models
 {
     public enum Geschlecht : byte
     {

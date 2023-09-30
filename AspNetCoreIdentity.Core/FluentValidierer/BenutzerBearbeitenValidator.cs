@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+﻿using AspNetCoreIdentity.Core.AnsichtModelle;
 using FluentValidation;
 
 namespace AspNetCoreIdentity.Web.FluentValidierer

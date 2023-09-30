@@ -1,7 +1,7 @@
-﻿using AspNetCoreIdentity.Web.AnsichtModelle;
+﻿using AspNetCoreIdentity.Core.AnsichtModelle;
 using FluentValidation;
 
-namespace AspNetCoreIdentity.Web.FluentValidierer
+namespace AspNetCoreIdentity.Core.FluentValidierer
 {
     public class BenutzerValidator : AbstractValidator<AnmeldenAnsichtModell>
     {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using AspNetCoreIdentity.Web.AnsichtModelle;
+using AspNetCoreIdentity.Core.AnsichtModelle;
 
-namespace AspNetCoreIdentity.Web.FluentValidierer
+namespace AspNetCoreIdentity.Core.FluentValidierer
 {
     public class PasswortÄndernValidator : AbstractValidator<PasswortÄndernAnsichtsModell>
     {
