@@ -1,8 +1,8 @@
-﻿using AspNetCoreIdentity.Web.Models;
+﻿using AspNetCoreIdentity.Repository.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace AspNetCoreIdentity.Web.SamenDaten
+namespace AspNetCoreIdentity.Repository.SamenDaten
 {
     public class BerechtigungSamenDaten
     {

@@ -1,21 +1,18 @@
-﻿using AspNetCoreIdentity.Web.Anforderungen;
-using AspNetCoreIdentity.Core.AnsichtModelle;
+﻿using AspNetCoreIdentity.Core.AnsichtModelle;
+using AspNetCoreIdentity.Core.FluentValidierer;
+using AspNetCoreIdentity.Core.Models;
+using AspNetCoreIdentity.Repository.Models;
+using AspNetCoreIdentity.Web.Anforderungen;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using AspNetCoreIdentity.Web.ClaimProviders;
 using AspNetCoreIdentity.Web.Dienste;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
-using AspNetCoreIdentity.Web.Models;
-using AspNetCoreIdentity.Core.OptionModell;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
-using System.Configuration;
-using AspNetCoreIdentity.Core.Models;
-using AspNetCoreIdentity.Core.FluentValidierer;
 
 namespace AspNetCoreIdentity.Web.Erweiterungen
 {

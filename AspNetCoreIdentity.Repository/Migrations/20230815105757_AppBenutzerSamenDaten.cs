@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AspNetCoreIdentity.Web.Migrations
+namespace AspNetCoreIdentity.Repository.Migrations
 {
     /// <inheritdoc />
     public partial class AppBenutzerSamenDaten : Migration

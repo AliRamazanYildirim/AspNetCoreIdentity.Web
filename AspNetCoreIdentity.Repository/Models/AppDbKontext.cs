@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AspNetCoreIdentity.Web.Models
+namespace AspNetCoreIdentity.Repository.Models
 {
     public class AppDbKontext:IdentityDbContext<AppBenutzer,AppRolle,string>
     {

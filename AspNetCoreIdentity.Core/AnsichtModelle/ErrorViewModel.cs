@@ -1,4 +1,4 @@
-namespace AspNetCoreIdentity.Web.Models
+namespace AspNetCoreIdentity.Core.AnsichtModelle
 {
     public class ErrorViewModel
     {

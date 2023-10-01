@@ -1,7 +1,7 @@
 using AspNetCoreIdentity.Web.Erweiterungen;
-using AspNetCoreIdentity.Web.Models;
+using AspNetCoreIdentity.Repository.Models;
 using AspNetCoreIdentity.Core.OptionModell;
-using AspNetCoreIdentity.Web.SamenDaten;
+using AspNetCoreIdentity.Repository.SamenDaten;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

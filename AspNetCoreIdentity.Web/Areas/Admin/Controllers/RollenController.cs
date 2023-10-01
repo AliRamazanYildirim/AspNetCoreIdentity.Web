@@ -1,5 +1,5 @@
 ﻿using AspNetCoreIdentity.Web.Areas.Admin.Models;
-using AspNetCoreIdentity.Web.Models;
+using AspNetCoreIdentity.Repository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCoreIdentity.Web.Erweiterungen;
