@@ -12,7 +12,11 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbKontext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlVerbindung"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlVerbindung"), options =>
+    {
+        //options.MigrationsAssembly("AspNetCoreIdentity.Repository");
+        options.MigrationsAssembly(typeof(AppDbKontext).Assembly.FullName);
+    });
 });
 
 
