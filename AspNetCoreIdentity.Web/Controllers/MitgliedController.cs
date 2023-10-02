@@ -1,6 +1,7 @@
 ﻿using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Core.FluentValidierer;
 using AspNetCoreIdentity.Core.Models;
+using AspNetCoreIdentity.Service.Dienste;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using Microsoft.AspNetCore.Authorization;
@@ -21,10 +22,12 @@ namespace AspNetCoreIdentity.Web.Controllers
         private readonly BenutzerBearbeitenValidator _validator;
         private readonly IFileProvider _fileProvider;
         private readonly IHttpContextAccessor _accessor;
+        private string BenutzerName => User.Identity!.Name!;
+        private readonly IMitgliedDienst _mitgliedDienst;
 
         public MitgliedController(SignInManager<AppBenutzer> signInManager, UserManager<AppBenutzer> userManager,
             PasswortÄndernValidator validation, BenutzerBearbeitenValidator validator, IFileProvider fileProvider,
-            IHttpContextAccessor accessor)
+            IHttpContextAccessor accessor, IMitgliedDienst mitgliedDienst)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -32,26 +35,19 @@ namespace AspNetCoreIdentity.Web.Controllers
             _validator = validator;
             _fileProvider = fileProvider;
             _accessor = accessor;
+            _mitgliedDienst = mitgliedDienst;
         }
 
         public async Task<IActionResult> Index()
         {
             _ = _accessor.HttpContext!.User.Claims.ToList();
-            var aktuellerBenutzer = (await _userManager.FindByNameAsync(User.Identity!.Name!))!;
-
-            var benutzerAnsichtModell = new BenutzerAnsichtModell
-            {
-                BenutzerName = aktuellerBenutzer.UserName,
-                Email = aktuellerBenutzer.Email,
-                Telefonnummer = aktuellerBenutzer.PhoneNumber,
-                BildUrl = aktuellerBenutzer.Bild
-            };
-            return View(benutzerAnsichtModell);
+            
+            return View(await _mitgliedDienst.RufeBenutzerAnsichtModellNachNameAufAsync(BenutzerName));
         }
 
         public async Task Ausloggen()
         {
-            await _signInManager.SignOutAsync();
+           await _mitgliedDienst.AusloggenAsync();
         }
         public IActionResult PasswortÄnderung()
         {
