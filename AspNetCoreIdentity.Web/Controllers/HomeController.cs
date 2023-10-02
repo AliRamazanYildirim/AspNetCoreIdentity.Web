@@ -1,7 +1,7 @@
 ﻿using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Core.FluentValidierer;
 using AspNetCoreIdentity.Core.Models;
-using AspNetCoreIdentity.Web.Dienste;
+using AspNetCoreIdentity.Service.Dienste;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
-namespace AspNetCoreIdentity.Web.Dienste
+namespace AspNetCoreIdentity.Service.Dienste
 {
     public class EmailDienst : IEmailDienst
     {

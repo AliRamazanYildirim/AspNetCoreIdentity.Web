@@ -5,7 +5,7 @@ using AspNetCoreIdentity.Repository.Models;
 using AspNetCoreIdentity.Web.Anforderungen;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using AspNetCoreIdentity.Web.ClaimProviders;
-using AspNetCoreIdentity.Web.Dienste;
+using AspNetCoreIdentity.Service.Dienste;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
 using FluentValidation;
@@ -64,6 +64,7 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             services.AddScoped<IClaimsTransformation, UserClaimProvider>();
             services.AddScoped<IAuthorizationHandler, UmtauschVerfallsAnforderungHandler>();
             services.AddScoped<IAuthorizationHandler, GewaltAnforderungHandler>();
+            services.AddScoped<IMitgliedDienst, MitgliedDienst>();
 
             services.AddAuthorization(opt =>
             {
