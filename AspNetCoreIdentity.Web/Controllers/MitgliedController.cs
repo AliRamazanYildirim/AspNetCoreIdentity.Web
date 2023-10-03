@@ -42,7 +42,7 @@ namespace AspNetCoreIdentity.Web.Controllers
         {
             _ = _accessor.HttpContext!.User.Claims.ToList();
             
-            return View(await _mitgliedDienst.RufeBenutzerAnsichtModellNachNameAufAsync(BenutzerName));
+            return View(await _mitgliedDienst.AufrufenBenutzerAnsichtModellNachNameAsync(BenutzerName));
         }
 
         public async Task Ausloggen()
@@ -94,20 +94,8 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         public async Task<IActionResult> BenutzerBearbeiten()
         {
-            ViewBag.geschlecht = new SelectList(Enum.GetNames(typeof(Geschlecht)));
-
-            var aktuellerBenutzer = await _userManager.FindByNameAsync(User.Identity!.Name!)!;
-
-            var benutzerAnscihtModell = new BenutzerBearbeitenAnsichtModell()
-            {
-                BenutzerName = aktuellerBenutzer!.UserName,
-                Email = aktuellerBenutzer.Email,
-                Telefonnummer = aktuellerBenutzer.PhoneNumber,
-                Stadt = aktuellerBenutzer.Stadt,
-                Geburtsdatum = aktuellerBenutzer.Geburtsdatum,
-                Geschlecht = aktuellerBenutzer.Geschlecht
-            };
-            return View(benutzerAnscihtModell);
+            ViewBag.geschlecht = _mitgliedDienst.GeschlechtSelectList(); 
+            return View(await _mitgliedDienst.AufrufenBenutzerBearbeitenAnsichtModellNachNameAsync(BenutzerName));
         }
 
         [HttpPost]
@@ -130,59 +118,17 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            var aktuellerBenutzer = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var (istErfolgreich, fehler) = await _mitgliedDienst.BenutzerBearbeitenAsync(anfrage, BenutzerName);
 
-            aktuellerBenutzer!.UserName = anfrage.BenutzerName;
-            aktuellerBenutzer.Email = anfrage.Email;
-            aktuellerBenutzer.PhoneNumber = anfrage.Telefonnummer;
-            aktuellerBenutzer.Geburtsdatum = anfrage.Geburtsdatum;
-            aktuellerBenutzer.Stadt = anfrage.Stadt;
-            aktuellerBenutzer.Geschlecht = anfrage.Geschlecht;
-
-            if (anfrage.Bild != null && anfrage.Bild.Length > 0)
+            if (!istErfolgreich)
             {
-                var bildWeg = _fileProvider.GetDirectoryContents("wwwroot");
-                var zufälligerDateiName = $"{Guid.NewGuid()}{Path.GetExtension(anfrage.Bild.FileName)}";
-                var neuerBildWeg = Path.Combine(bildWeg!.First(x => x.Name == "benutzerbilder").PhysicalPath!, zufälligerDateiName);
-                using var strom = new FileStream(neuerBildWeg, FileMode.Create);
-                await anfrage.Bild.CopyToAsync(strom);
-                aktuellerBenutzer.Bild = zufälligerDateiName;
-
-            }
-            var benutzerAktualisieren = await _userManager.UpdateAsync(aktuellerBenutzer);
-
-            if (!benutzerAktualisieren.Succeeded)
-            {
-                ModelState.AddModelStateFehlerListe(benutzerAktualisieren.Errors);
+                ModelState.AddModelStateFehlerListe(fehler!);
                 return View();
             }
 
-            await _userManager.UpdateSecurityStampAsync(aktuellerBenutzer);
-            await _signInManager.SignOutAsync();
-            if(anfrage.Geburtsdatum.HasValue)
-            {
-                await _signInManager.SignInWithClaimsAsync(aktuellerBenutzer, true, new[]
-                {
-                        new Claim("Geburtsdatum",aktuellerBenutzer.Geburtsdatum!.Value.ToString())
-                });
-            }
-            else
-            await _signInManager.SignInAsync(aktuellerBenutzer, true);
-            
-
             TempData["ErfolgsNachricht"] = "Die Mitgliederinformationen wurden erfolgreich geändert.";
 
-            var benutzerAnscihtModell = new BenutzerBearbeitenAnsichtModell()
-            {
-                BenutzerName = aktuellerBenutzer!.UserName,
-                Email = aktuellerBenutzer.Email,
-                Telefonnummer = aktuellerBenutzer.PhoneNumber,
-                Stadt = aktuellerBenutzer.Stadt,
-                Geburtsdatum = aktuellerBenutzer.Geburtsdatum,
-                Geschlecht = aktuellerBenutzer.Geschlecht
-            };
-
-            return View(benutzerAnscihtModell);
+            return View(await _mitgliedDienst.AufrufenBenutzerBearbeitenAnsichtModellNachNameAsync(BenutzerName));
         }
 
         public IActionResult AccessDenied(string ReturnUrl)
@@ -201,13 +147,8 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpGet]
         public IActionResult Claims()
         {
-            var benutzerClaimsListe = _accessor.HttpContext!.User.Claims.Select(x => new ClaimAnsichtModell
-            {
-                Anbieter = x.Issuer,
-                Typ = x.Type,
-                Wert = x.Value
-            }).ToList();
-            return View(benutzerClaimsListe);
+            
+            return View(_mitgliedDienst.AufrufenClaim(User));
         }
 
         [Authorize(Policy = "AdminStadtPolicy")]
