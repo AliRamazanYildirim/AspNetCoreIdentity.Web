@@ -1,4 +1,6 @@
 ﻿using AspNetCoreIdentity.Core.AnsichtModelle;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +13,8 @@ namespace AspNetCoreIdentity.Service.Dienste
     {
         Task<BenutzerAnsichtModell> RufeBenutzerAnsichtModellNachNameAufAsync(string benutzerName);
         Task AusloggenAsync();
+        Task<bool> ÜberprüfePasswortÄnderungAsync(string benutzerName, string passwort);
+        Task<(bool, IEnumerable<IdentityError>?)> PasswortÄnderungAsync(string benutzerName, string altesPasswort, string neuesPasswort);
+
     }
 }

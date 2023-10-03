@@ -25,7 +25,7 @@ namespace AspNetCoreIdentity.Service.Dienste
             await _signInManager.SignOutAsync();
         }
 
-        async Task<BenutzerAnsichtModell> IMitgliedDienst.RufeBenutzerAnsichtModellNachNameAufAsync(string benutzerName)
+        public async Task<BenutzerAnsichtModell> RufeBenutzerAnsichtModellNachNameAufAsync(string benutzerName)
         {
             var aktuellerBenutzer = (await _userManager.FindByNameAsync(benutzerName))!;
 
@@ -36,6 +36,30 @@ namespace AspNetCoreIdentity.Service.Dienste
                 Telefonnummer = aktuellerBenutzer.PhoneNumber,
                 BildUrl = aktuellerBenutzer.Bild
             };
+        }
+
+        public async Task<bool> ÜberprüfePasswortÄnderungAsync(string benutzerName, string passwort)
+        {
+            var aktuellerBenutzer = (await _userManager.FindByNameAsync(benutzerName))!;
+
+            return await _userManager.CheckPasswordAsync(aktuellerBenutzer, passwort);
+        }
+
+        public async Task<(bool, IEnumerable<IdentityError>?)> PasswortÄnderungAsync(string benutzerName, string altesPasswort, string neuesPasswort)
+        {
+            var aktuellerBenutzer = (await _userManager.FindByNameAsync(benutzerName))!;
+
+            var resultat = await _userManager.ChangePasswordAsync(aktuellerBenutzer, altesPasswort, neuesPasswort);
+            if(!resultat.Succeeded)
+            {
+                return (false, resultat.Errors);
+            }
+            await _userManager.UpdateSecurityStampAsync(aktuellerBenutzer);
+            await _signInManager.SignOutAsync();
+            await _signInManager.PasswordSignInAsync(aktuellerBenutzer, neuesPasswort, true, false);
+
+            return (true, null);
+
         }
     }
 }

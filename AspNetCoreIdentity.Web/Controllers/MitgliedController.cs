@@ -73,29 +73,20 @@ namespace AspNetCoreIdentity.Web.Controllers
             {
                 return View();
             }
-            var aktuellerBenutzer = await _userManager.FindByNameAsync(User.Identity!.Name!);
-            if (aktuellerBenutzer == null)
-            {
-                ModelState.AddModelError(string.Empty, "Dieser Benutzer wurde nicht gefunden.");
-                return View();
-            }
 
-            var altesPasswortPrüfen = await _userManager.CheckPasswordAsync(aktuellerBenutzer, anfrage.AltesPasswort);
-            if (!altesPasswortPrüfen)
+            if (!await _mitgliedDienst.ÜberprüfePasswortÄnderungAsync(BenutzerName, anfrage.AltesPasswort))
             {
                 ModelState.AddModelError(string.Empty, "Ihr altes Passwort ist falsch.");
                 return View();
             }
 
-            var resultat = await _userManager.ChangePasswordAsync(aktuellerBenutzer, anfrage.AltesPasswort, anfrage.NeuesPasswort);
-            if (!resultat.Succeeded)
+            var (istErfolgreich, fehler) = await _mitgliedDienst.PasswortÄnderungAsync(BenutzerName, anfrage.AltesPasswort, anfrage.NeuesPasswort);
+            if (!istErfolgreich)
             {
-                ModelState.AddModelStateFehlerListe(resultat.Errors.Select(x => x.Description).ToList());
+                ModelState.AddModelStateFehlerListe(fehler!);
                 return View();
             }
-            await _userManager.UpdateSecurityStampAsync(aktuellerBenutzer);
-            await _signInManager.SignOutAsync();
-            await _signInManager.PasswordSignInAsync(aktuellerBenutzer, anfrage.NeuesPasswort, true, false);
+           
 
             TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich geändert.";
             return View();
