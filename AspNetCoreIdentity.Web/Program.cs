@@ -12,35 +12,35 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbKontext>(options =>
 {
-    //! Passwort aus Umgebungsvariable abrufen
-    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-    if (string.IsNullOrEmpty(dbPassword))
+    var connectionString = builder.Configuration.GetConnectionString("SqlVerbindung");
+    if (string.IsNullOrWhiteSpace(connectionString))
     {
-        throw new InvalidOperationException(
-            "Das Datenbankkennwort wurde in der Umgebungsvariablen nicht gefunden."
+        throw new InvalidOperationException("Die Verbindungszeichenfolge wurde nicht gefunden.");
+    }
+
+    const string dbPasswordPlaceholder = "{DB_PASSWORD}";
+    if (connectionString.Contains(dbPasswordPlaceholder, StringComparison.Ordinal))
+    {
+        var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+        if (string.IsNullOrWhiteSpace(dbPassword))
+        {
+            throw new InvalidOperationException(
+                "Das Datenbankkennwort wurde in der Umgebungsvariablen DB_PASSWORD nicht gefunden."
+            );
+        }
+
+        connectionString = connectionString.Replace(
+            dbPasswordPlaceholder,
+            dbPassword,
+            StringComparison.Ordinal
         );
     }
 
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("SqlVerbindung"),
-        options =>
-        {
-            //options.MigrationsAssembly("AspNetCoreIdentity.Repository");
-            options.MigrationsAssembly(typeof(AppDbKontext).Assembly.FullName);
-        }
-    );
-    //! Ersetze den Platzhalter {DB_PASSWORD} in der Verbindungszeichenfolge durch das tatsächliche Passwort
-    var connectionString = builder.Configuration.GetConnectionString("SqlVerbindung");
-    if (connectionString == null)
-    {
-        throw new InvalidOperationException("Die Verbindungszeichenfolge wurde nicht gefunden.");
-    }
-    connectionString = connectionString.Replace("{DB_PASSWORD}", dbPassword);
-    options.UseSqlServer(
         connectionString,
-        options =>
+        sqlOptions =>
         {
-            options.MigrationsAssembly(typeof(AppDbKontext).Assembly.FullName);
+            sqlOptions.MigrationsAssembly(typeof(AppDbKontext).Assembly.FullName);
         }
     );
 });

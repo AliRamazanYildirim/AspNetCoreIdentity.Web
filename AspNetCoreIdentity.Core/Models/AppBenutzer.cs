@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentity.Core.Models
 {
-    public class AppBenutzer:IdentityUser
+    public class AppBenutzer : IdentityUser
     {
         public string? Stadt { get; set; }
         public string? Bild { get; set; }
