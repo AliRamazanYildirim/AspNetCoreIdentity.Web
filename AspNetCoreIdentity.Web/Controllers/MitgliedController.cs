@@ -1,4 +1,5 @@
-﻿using AspNetCoreIdentity.Core.AnsichtModelle;
+﻿using System.Security.Claims;
+using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Core.FluentValidierer;
 using AspNetCoreIdentity.Core.Models;
 using AspNetCoreIdentity.Service.Dienste;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
-using System.Security.Claims;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {
@@ -25,9 +25,15 @@ namespace AspNetCoreIdentity.Web.Controllers
         private string BenutzerName => User.Identity!.Name!;
         private readonly IMitgliedDienst _mitgliedDienst;
 
-        public MitgliedController(SignInManager<AppBenutzer> signInManager, UserManager<AppBenutzer> userManager,
-            PasswortÄndernValidator validation, BenutzerBearbeitenValidator validator, IFileProvider fileProvider,
-            IHttpContextAccessor accessor, IMitgliedDienst mitgliedDienst)
+        public MitgliedController(
+            SignInManager<AppBenutzer> signInManager,
+            UserManager<AppBenutzer> userManager,
+            PasswortÄndernValidator validation,
+            BenutzerBearbeitenValidator validator,
+            IFileProvider fileProvider,
+            IHttpContextAccessor accessor,
+            IMitgliedDienst mitgliedDienst
+        )
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -41,14 +47,17 @@ namespace AspNetCoreIdentity.Web.Controllers
         public async Task<IActionResult> Index()
         {
             _ = _accessor.HttpContext!.User.Claims.ToList();
-            
-            return View(await _mitgliedDienst.AufrufenBenutzerAnsichtModellNachNameAsync(BenutzerName));
+
+            return View(
+                await _mitgliedDienst.AufrufenBenutzerAnsichtModellNachNameAsync(BenutzerName)
+            );
         }
 
         public async Task Ausloggen()
         {
-           await _mitgliedDienst.AusloggenAsync();
+            await _mitgliedDienst.AusloggenAsync();
         }
+
         public IActionResult PasswortÄnderung()
         {
             return View();
@@ -74,19 +83,27 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            if (!await _mitgliedDienst.ÜberprüfePasswortÄnderungAsync(BenutzerName, anfrage.AltesPasswort))
+            if (
+                !await _mitgliedDienst.ÜberprüfePasswortÄnderungAsync(
+                    BenutzerName,
+                    anfrage.AltesPasswort
+                )
+            )
             {
                 ModelState.AddModelError(string.Empty, "Ihr altes Passwort ist falsch.");
                 return View();
             }
 
-            var (istErfolgreich, fehler) = await _mitgliedDienst.PasswortÄnderungAsync(BenutzerName, anfrage.AltesPasswort, anfrage.NeuesPasswort);
+            var (istErfolgreich, fehler) = await _mitgliedDienst.PasswortÄnderungAsync(
+                BenutzerName,
+                anfrage.AltesPasswort,
+                anfrage.NeuesPasswort
+            );
             if (!istErfolgreich)
             {
                 ModelState.AddModelStateFehlerListe(fehler!);
                 return View();
             }
-           
 
             TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich geändert.";
             return View();
@@ -94,8 +111,12 @@ namespace AspNetCoreIdentity.Web.Controllers
 
         public async Task<IActionResult> BenutzerBearbeiten()
         {
-            ViewBag.geschlecht = _mitgliedDienst.GeschlechtSelectList(); 
-            return View(await _mitgliedDienst.AufrufenBenutzerBearbeitenAnsichtModellNachNameAsync(BenutzerName));
+            ViewBag.geschlecht = _mitgliedDienst.GeschlechtSelectList();
+            return View(
+                await _mitgliedDienst.AufrufenBenutzerBearbeitenAnsichtModellNachNameAsync(
+                    BenutzerName
+                )
+            );
         }
 
         [HttpPost]
@@ -118,7 +139,10 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            var (istErfolgreich, fehler) = await _mitgliedDienst.BenutzerBearbeitenAsync(anfrage, BenutzerName);
+            var (istErfolgreich, fehler) = await _mitgliedDienst.BenutzerBearbeitenAsync(
+                anfrage,
+                BenutzerName
+            );
 
             if (!istErfolgreich)
             {
@@ -126,19 +150,28 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            TempData["ErfolgsNachricht"] = "Die Mitgliederinformationen wurden erfolgreich geändert.";
+            TempData["ErfolgsNachricht"] =
+                "Die Mitgliederinformationen wurden erfolgreich geändert.";
 
-            return View(await _mitgliedDienst.AufrufenBenutzerBearbeitenAnsichtModellNachNameAsync(BenutzerName));
+            return View(
+                await _mitgliedDienst.AufrufenBenutzerBearbeitenAnsichtModellNachNameAsync(
+                    BenutzerName
+                )
+            );
         }
 
         public IActionResult AccessDenied(string ReturnUrl)
         {
             if (string.IsNullOrEmpty(ReturnUrl))
             {
-                throw new ArgumentException($"\"{nameof(ReturnUrl)}\" kann nicht NULL oder leer sein.", nameof(ReturnUrl));
+                throw new ArgumentException(
+                    $"\"{nameof(ReturnUrl)}\" kann nicht NULL oder leer sein.",
+                    nameof(ReturnUrl)
+                );
             }
 
-            string nachricht = @"Sie sind nicht berechtigt, diese Seite anzusehen. 
+            string nachricht =
+                @"Sie sind nicht berechtigt, diese Seite anzusehen. 
                         Bitte wenden Sie sich an den Seitenadministrator, um eine Genehmigung zu erhalten.";
             ViewBag.nachricht = nachricht;
             return View();
@@ -147,7 +180,6 @@ namespace AspNetCoreIdentity.Web.Controllers
         [HttpGet]
         public IActionResult Claims()
         {
-            
             return View(_mitgliedDienst.AufrufenClaim(User));
         }
 

@@ -3,6 +3,6 @@
     public enum Geschlecht : byte
     {
         Mann = 1,
-        Frau = 2
+        Frau = 2,
     }
 }

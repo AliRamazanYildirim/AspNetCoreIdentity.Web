@@ -2,10 +2,8 @@
 {
     public class PasswortZurücksetzenAnsichtModell
     {
-        public PasswortZurücksetzenAnsichtModell()
-        {
-                
-        }
+        public PasswortZurücksetzenAnsichtModell() { }
+
         public PasswortZurücksetzenAnsichtModell(string? passwort, string? passwortBestätigen)
         {
             Passwort = passwort;

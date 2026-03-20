@@ -2,10 +2,8 @@
 {
     public class EinloggenAnsichtModell
     {
-        public EinloggenAnsichtModell()
-        {
-                
-        }
+        public EinloggenAnsichtModell() { }
+
         public EinloggenAnsichtModell(string? email, string? passwort, bool errinnereMich)
         {
             Email = email;
@@ -16,6 +14,5 @@
         public string? Email { get; set; }
         public string? Passwort { get; set; }
         public bool ErrinnereMich { get; set; }
-
     }
 }

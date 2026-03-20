@@ -5,7 +5,10 @@ namespace AspNetCoreIdentity.Core.FluentValidierer
 {
     public class UserValidator : IUserValidator<AppBenutzer>
     {
-        public Task<IdentityResult> ValidateAsync(UserManager<AppBenutzer> manager, AppBenutzer user)
+        public Task<IdentityResult> ValidateAsync(
+            UserManager<AppBenutzer> manager,
+            AppBenutzer user
+        )
         {
             var fehler = new List<IdentityError>();
 
@@ -15,20 +18,25 @@ namespace AspNetCoreIdentity.Core.FluentValidierer
 
                 if (istNumerisch)
                 {
-                    fehler.Add(new IdentityError
-                    {
-                        Code = "BenutzernameEnthältErsterBuchstabeZiffer",
-                        Description = "Das erste Zeichen des Benutzernamens darf keinen numerischen Wert enthalten."
-                    });
+                    fehler.Add(
+                        new IdentityError
+                        {
+                            Code = "BenutzernameEnthältErsterBuchstabeZiffer",
+                            Description =
+                                "Das erste Zeichen des Benutzernamens darf keinen numerischen Wert enthalten.",
+                        }
+                    );
                 }
             }
             else
             {
-                fehler.Add(new IdentityError
-                {
-                    Code = "BenutzernameUngültig",
-                    Description = "Der Benutzername darf nicht null oder leer sein."
-                });
+                fehler.Add(
+                    new IdentityError
+                    {
+                        Code = "BenutzernameUngültig",
+                        Description = "Der Benutzername darf nicht null oder leer sein.",
+                    }
+                );
             }
 
             if (fehler.Any())
@@ -38,6 +46,5 @@ namespace AspNetCoreIdentity.Core.FluentValidierer
 
             return Task.FromResult(IdentityResult.Success);
         }
-
     }
 }

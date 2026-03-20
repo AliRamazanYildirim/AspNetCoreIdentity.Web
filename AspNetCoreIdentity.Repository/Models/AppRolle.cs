@@ -2,7 +2,5 @@
 
 namespace AspNetCoreIdentity.Repository.Models
 {
-    public class AppRolle:IdentityRole
-    {
-    }
+    public class AppRolle : IdentityRole { }
 }

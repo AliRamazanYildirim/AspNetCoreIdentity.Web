@@ -1,6 +1,6 @@
 ﻿using AspNetCoreIdentity.Core.Models;
-using AspNetCoreIdentity.Web.Areas.Admin.Models;
 using AspNetCoreIdentity.Repository.Models;
+using AspNetCoreIdentity.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,12 +27,14 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
         public async Task<IActionResult> BenutzerListe()
         {
             var benutzerListe = await _userManager.Users.ToListAsync();
-            var benutzerAnsichtModellListe = benutzerListe.Select(x => new BenutzerAnsichtModell()
-            {
-                BenutzerID = x.Id,
-                BenutzerName = x.UserName,
-                BenutzerEmail = x.Email
-            }).ToList();
+            var benutzerAnsichtModellListe = benutzerListe
+                .Select(x => new BenutzerAnsichtModell()
+                {
+                    BenutzerID = x.Id,
+                    BenutzerName = x.UserName,
+                    BenutzerEmail = x.Email,
+                })
+                .ToList();
             return View(benutzerAnsichtModellListe);
         }
     }

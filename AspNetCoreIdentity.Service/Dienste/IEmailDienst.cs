@@ -2,6 +2,9 @@
 {
     public interface IEmailDienst
     {
-        Task SendeZurücksetzenPasswortEmail(string? zurücksetzenPasswortEmailLink, string? ZurEmail);
+        Task SendeZurücksetzenPasswortEmail(
+            string? zurücksetzenPasswortEmailLink,
+            string? ZurEmail
+        );
     }
 }

@@ -1,13 +1,13 @@
-﻿using AspNetCoreIdentity.Web.Areas.Admin.Models;
+﻿using AspNetCoreIdentity.Core.Models;
 using AspNetCoreIdentity.Repository.Models;
+using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
+using AspNetCoreIdentity.Web.Areas.Admin.Models;
+using AspNetCoreIdentity.Web.Controllers;
+using AspNetCoreIdentity.Web.Erweiterungen;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using AspNetCoreIdentity.Web.Erweiterungen;
-using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using Microsoft.EntityFrameworkCore;
-using AspNetCoreIdentity.Web.Controllers;
-using Microsoft.AspNetCore.Authorization;
-using AspNetCoreIdentity.Core.Models;
 
 namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
 {
@@ -19,20 +19,22 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
         private readonly RoleManager<AppRolle> _roleManager;
         private readonly RolleValidator _validator;
 
-        public RollenController(UserManager<AppBenutzer> userManager, RoleManager<AppRolle> roleManager, RolleValidator validator)
+        public RollenController(
+            UserManager<AppBenutzer> userManager,
+            RoleManager<AppRolle> roleManager,
+            RolleValidator validator
+        )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _validator = validator;
         }
- 
+
         public async Task<IActionResult> Index()
         {
-            var rollen = await _roleManager.Roles.Select(x => new RollenAuflistenAnscihtModell
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).ToListAsync();
+            var rollen = await _roleManager
+                .Roles.Select(x => new RollenAuflistenAnscihtModell { Id = x.Id, Name = x.Name })
+                .ToListAsync();
 
             return View(rollen);
         }
@@ -66,10 +68,7 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(anfrage));
             }
 
-            var resultat = await _roleManager.CreateAsync(new AppRolle
-            {
-                Name = anfrage.Name
-            });
+            var resultat = await _roleManager.CreateAsync(new AppRolle { Name = anfrage.Name });
 
             if (!resultat.Succeeded)
             {
@@ -86,30 +85,35 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             var rolleAktualisieren = await _roleManager.FindByIdAsync(id);
             return rolleAktualisieren == null
                 ? throw new Exception("Keine Rolle zu aktualisieren")
-                : (IActionResult)View(new RolleAktualisierenAnscihtModell()
-                {
-                    Id = rolleAktualisieren.Id,
-                    Name = rolleAktualisieren.Name
-                });
+                : (IActionResult)View(
+                    new RolleAktualisierenAnscihtModell()
+                    {
+                        Id = rolleAktualisieren.Id,
+                        Name = rolleAktualisieren.Name,
+                    }
+                );
         }
 
         [HttpPost]
         public async Task<IActionResult> RolleAktualisieren(RolleAktualisierenAnscihtModell anfrage)
         {
-            var rolleAktualisieren = await _roleManager.FindByIdAsync(anfrage.Id!) ?? throw new Exception("Keine Rolle zu aktualisieren");
+            var rolleAktualisieren =
+                await _roleManager.FindByIdAsync(anfrage.Id!)
+                ?? throw new Exception("Keine Rolle zu aktualisieren");
             rolleAktualisieren.Name = anfrage.Name;
             await _roleManager.UpdateAsync(rolleAktualisieren);
             ViewData["ErfolgsNachricht"] = "Die Rolleninformationen wurden aktualisiert.";
             return View();
-               
         }
 
         public async Task<IActionResult> RolleLöschen(string id)
         {
-            var rolleLöschen = await _roleManager.FindByIdAsync(id) ?? throw new Exception("Keine Rolle zu löshen");
+            var rolleLöschen =
+                await _roleManager.FindByIdAsync(id)
+                ?? throw new Exception("Keine Rolle zu löshen");
             var resultat = await _roleManager.DeleteAsync(rolleLöschen);
 
-            if(!resultat.Succeeded)
+            if (!resultat.Succeeded)
             {
                 ModelState.AddModelError(String.Empty, "Keine Rolle wurde gefunden");
             }
@@ -125,15 +129,15 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
             var rollenAnscihtModellList = new List<RollenZuweisenAnscihtModell>();
             var benutzerRollen = await _userManager.GetRolesAsync(aktuellerBenutzer!);
 
-            foreach(var rolle in rollen)
+            foreach (var rolle in rollen)
             {
                 var rollenZuweisenAnscihtModell = new RollenZuweisenAnscihtModell()
                 {
                     Id = rolle.Id,
-                    Name = rolle.Name
+                    Name = rolle.Name,
                 };
 
-                if(benutzerRollen.Contains(rolle.Name!))
+                if (benutzerRollen.Contains(rolle.Name!))
                 {
                     rollenZuweisenAnscihtModell.Existiert = true;
                 }
@@ -143,10 +147,13 @@ namespace AspNetCoreIdentity.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RolleZuweisen(string benutzerID, List<RollenZuweisenAnscihtModell> anfrage)
+        public async Task<IActionResult> RolleZuweisen(
+            string benutzerID,
+            List<RollenZuweisenAnscihtModell> anfrage
+        )
         {
             var benutzerFürRolleZuweisen = await _userManager.FindByIdAsync(benutzerID)!;
-            foreach(var rolle in anfrage)
+            foreach (var rolle in anfrage)
             {
                 if (rolle.Existiert)
                 {

@@ -2,10 +2,10 @@
 using AspNetCoreIdentity.Core.FluentValidierer;
 using AspNetCoreIdentity.Core.Models;
 using AspNetCoreIdentity.Repository.Models;
+using AspNetCoreIdentity.Service.Dienste;
 using AspNetCoreIdentity.Web.Anforderungen;
 using AspNetCoreIdentity.Web.Areas.Admin.FluentValidierer;
 using AspNetCoreIdentity.Web.ClaimProviders;
-using AspNetCoreIdentity.Service.Dienste;
 using AspNetCoreIdentity.Web.FluentValidierer;
 using AspNetCoreIdentity.Web.Lokalisierungen;
 using FluentValidation;
@@ -28,37 +28,51 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
             {
                 option.TokenLifespan = TimeSpan.FromHours(7);
             });
-            services.AddIdentity<AppBenutzer, AppRolle>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZçşğüö@!#$%_-1234567890";
+            services
+                .AddIdentity<AppBenutzer, AppRolle>(options =>
+                {
+                    options.User.RequireUniqueEmail = true;
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZçşğüö@!#$%_-1234567890";
 
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireDigit = true;
 
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-                options.Lockout.MaxFailedAccessAttempts = 3;
-
-            }).AddPasswordValidator<PasswortValidator>().AddUserValidator<UserValidator>()
-            .AddErrorDescriber<LokalisierungIdentityErrorDescriber>()
-            .AddDefaultTokenProviders()
-            .AddEntityFrameworkStores<AppDbKontext>();
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+                })
+                .AddPasswordValidator<PasswortValidator>()
+                .AddUserValidator<UserValidator>()
+                .AddErrorDescriber<LokalisierungIdentityErrorDescriber>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<AppDbKontext>();
 
             services.AddScoped<IEmailDienst, EmailDienst>();
 
             services.AddScoped<IValidator<AnmeldenAnsichtModell>, BenutzerValidator>();
             services.AddScoped<IValidator<EinloggenAnsichtModell>, EinloggenValidator>();
-            services.AddScoped<IValidator<PasswortVergessenAnsichtModell>, PasswortVergessenValidator>();
-            services.AddScoped<IValidator<PasswortZurücksetzenAnsichtModell>, PasswortZurücksetzenValidator>();
+            services.AddScoped<
+                IValidator<PasswortVergessenAnsichtModell>,
+                PasswortVergessenValidator
+            >();
+            services.AddScoped<
+                IValidator<PasswortZurücksetzenAnsichtModell>,
+                PasswortZurücksetzenValidator
+            >();
             services.AddScoped<IValidator<PasswortÄndernAnsichtsModell>, PasswortÄndernValidator>();
-            services.AddScoped<IValidator<BenutzerBearbeitenAnsichtModell>, BenutzerBearbeitenValidator>();
+            services.AddScoped<
+                IValidator<BenutzerBearbeitenAnsichtModell>,
+                BenutzerBearbeitenValidator
+            >();
             services.AddValidatorsFromAssemblyContaining<BenutzerValidator>();
             services.AddValidatorsFromAssemblyContaining<RolleValidator>();
 
-            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
+            services.AddSingleton<IFileProvider>(
+                new PhysicalFileProvider(Directory.GetCurrentDirectory())
+            );
 
             services.AddHttpContextAccessor();
             services.AddScoped<IClaimsTransformation, UserClaimProvider>();
@@ -68,46 +82,79 @@ namespace AspNetCoreIdentity.Web.Erweiterungen
 
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy("AdminStadtPolicy", policy =>
-                {
-                    policy.RequireClaim("stadt", "Frankfurt");
-                });
-                opt.AddPolicy("UmtauschPolicy", policy =>
-                {
-                    policy.AddRequirements(new UmtauschVerfallsAnforderung());
-                });
-                opt.AddPolicy("GewaltPolicy", policy =>
-                {
-                    policy.AddRequirements(new GewaltAnforderung()
+                opt.AddPolicy(
+                    "AdminStadtPolicy",
+                    policy =>
                     {
-                        Alter = 18
-                    });
-                });
-                opt.AddPolicy("BestellungBerechtigungLesenOderLöschenPolicy", policy =>
-                {
-                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
-                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Katalog.Löschen);
-                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
-                });
-                opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Bestellung.Lesen", policy =>
-                {
-                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen);
-                });
-                opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Bestellung.Löschen", policy =>
-                {
-                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Bestellung.Löschen);
-                });
-                opt.AddPolicy("BerechtigungenRoot.Berechtigungen.Vorrat.Löschen", policy =>
-                {
-                    policy.RequireClaim("Berechtigungen", Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen);
-                });
+                        policy.RequireClaim("stadt", "Frankfurt");
+                    }
+                );
+                opt.AddPolicy(
+                    "UmtauschPolicy",
+                    policy =>
+                    {
+                        policy.AddRequirements(new UmtauschVerfallsAnforderung());
+                    }
+                );
+                opt.AddPolicy(
+                    "GewaltPolicy",
+                    policy =>
+                    {
+                        policy.AddRequirements(new GewaltAnforderung() { Alter = 18 });
+                    }
+                );
+                opt.AddPolicy(
+                    "BestellungBerechtigungLesenOderLöschenPolicy",
+                    policy =>
+                    {
+                        policy.RequireClaim(
+                            "Berechtigungen",
+                            Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen
+                        );
+                        policy.RequireClaim(
+                            "Berechtigungen",
+                            Core.BerechtigungenRoot.Berechtigungen.Katalog.Löschen
+                        );
+                        policy.RequireClaim(
+                            "Berechtigungen",
+                            Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen
+                        );
+                    }
+                );
+                opt.AddPolicy(
+                    "BerechtigungenRoot.Berechtigungen.Bestellung.Lesen",
+                    policy =>
+                    {
+                        policy.RequireClaim(
+                            "Berechtigungen",
+                            Core.BerechtigungenRoot.Berechtigungen.Bestellung.Lesen
+                        );
+                    }
+                );
+                opt.AddPolicy(
+                    "BerechtigungenRoot.Berechtigungen.Bestellung.Löschen",
+                    policy =>
+                    {
+                        policy.RequireClaim(
+                            "Berechtigungen",
+                            Core.BerechtigungenRoot.Berechtigungen.Bestellung.Löschen
+                        );
+                    }
+                );
+                opt.AddPolicy(
+                    "BerechtigungenRoot.Berechtigungen.Vorrat.Löschen",
+                    policy =>
+                    {
+                        policy.RequireClaim(
+                            "Berechtigungen",
+                            Core.BerechtigungenRoot.Berechtigungen.Vorrat.Löschen
+                        );
+                    }
+                );
             });
             services.ConfigureApplicationCookie(conf =>
             {
-                var cookieBuilder = new CookieBuilder
-                {
-                    Name = "IdentityCookie"
-                };
+                var cookieBuilder = new CookieBuilder { Name = "IdentityCookie" };
                 conf.LoginPath = new PathString("/Home/Einloggen");
                 conf.LogoutPath = new PathString("/Mitglied/Ausloggen");
                 conf.AccessDeniedPath = new PathString("/Mitglied/AccessDenied");

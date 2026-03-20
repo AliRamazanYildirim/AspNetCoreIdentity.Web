@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#.vscode/ is not ignored by default because it can contain non-user-specific settings that are useful to share, such as recommended extensions and debugging configurations. Uncomment the next line if you want to ignore the entire .vscode folder.
+.vscode/

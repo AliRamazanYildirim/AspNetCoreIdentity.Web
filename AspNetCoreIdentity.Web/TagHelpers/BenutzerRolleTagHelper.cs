@@ -1,9 +1,9 @@
-﻿using AspNetCoreIdentity.Core.Models;
+﻿using System.Diagnostics;
+using System.Text;
+using AspNetCoreIdentity.Core.Models;
 using AspNetCoreIdentity.Repository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Diagnostics;
-using System.Text;
 
 namespace AspNetCoreIdentity.Web.TagHelpers
 {
@@ -17,15 +17,20 @@ namespace AspNetCoreIdentity.Web.TagHelpers
         }
 
         public string? BenutzerID { get; set; } = null!;
+
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             var benutzer = await _userManager.FindByIdAsync(BenutzerID!);
             var benutzerRollen = await _userManager.GetRolesAsync(benutzer!);
             var stringBuilder = new StringBuilder();
-            benutzerRollen.ToList().ForEach(x =>
-            {
-                stringBuilder.Append(@$"<span class='badge bg-warning mx-1'>{x.ToLower()}</span>");
-            });
+            benutzerRollen
+                .ToList()
+                .ForEach(x =>
+                {
+                    stringBuilder.Append(
+                        @$"<span class='badge bg-warning mx-1'>{x.ToLower()}</span>"
+                    );
+                });
 
             output.Content.SetHtmlContent(stringBuilder.ToString());
         }

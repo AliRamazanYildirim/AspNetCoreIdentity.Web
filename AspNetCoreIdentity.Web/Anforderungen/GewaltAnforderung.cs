@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetCoreIdentity.Web.Anforderungen
 {
-    public class GewaltAnforderung: IAuthorizationRequirement
+    public class GewaltAnforderung : IAuthorizationRequirement
     {
         public int? Alter { get; set; }
     }
+
     public class GewaltAnforderungHandler : AuthorizationHandler<GewaltAnforderung>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, GewaltAnforderung requirement)
+        protected override Task HandleRequirementAsync(
+            AuthorizationHandlerContext context,
+            GewaltAnforderung requirement
+        )
         {
             if (!context.User.HasClaim(x => x.Type == "Geburtsdatum"))
             {
@@ -21,7 +25,8 @@ namespace AspNetCoreIdentity.Web.Anforderungen
             var geburtsdatum = Convert.ToDateTime(geburtsdatumClaim.Value);
             var alter = heute.Year - geburtsdatum.Year;
 
-            if (geburtsdatum > heute.AddYears(-alter)) alter--;
+            if (geburtsdatum > heute.AddYears(-alter))
+                alter--;
 
             if (requirement.Alter > alter)
             {

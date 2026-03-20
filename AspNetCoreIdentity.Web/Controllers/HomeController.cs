@@ -1,12 +1,12 @@
-﻿using AspNetCoreIdentity.Core.AnsichtModelle;
+﻿using System.Diagnostics;
+using System.Security.Claims;
+using AspNetCoreIdentity.Core.AnsichtModelle;
 using AspNetCoreIdentity.Core.FluentValidierer;
 using AspNetCoreIdentity.Core.Models;
 using AspNetCoreIdentity.Service.Dienste;
 using AspNetCoreIdentity.Web.Erweiterungen;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Security.Claims;
 
 namespace AspNetCoreIdentity.Web.Controllers
 {
@@ -19,7 +19,14 @@ namespace AspNetCoreIdentity.Web.Controllers
         private readonly EinloggenValidator _validator;
         private readonly IEmailDienst _emailDienst;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppBenutzer> userManager, BenutzerValidator validation, SignInManager<AppBenutzer> signInManager, IEmailDienst emailDienst, EinloggenValidator validator)
+        public HomeController(
+            ILogger<HomeController> logger,
+            UserManager<AppBenutzer> userManager,
+            BenutzerValidator validation,
+            SignInManager<AppBenutzer> signInManager,
+            IEmailDienst emailDienst,
+            EinloggenValidator validator
+        )
         {
             _logger = logger;
             _userManager = userManager;
@@ -64,41 +71,51 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            var identityResultat = await _userManager.CreateAsync(new()
-            {
-                UserName = anfrage.BenutzerName,
-                PhoneNumber = anfrage.Telefonnummer,
-                Email = anfrage.Email
-            }, anfrage.PasswortBestätigen ?? "");
+            var identityResultat = await _userManager.CreateAsync(
+                new()
+                {
+                    UserName = anfrage.BenutzerName,
+                    PhoneNumber = anfrage.Telefonnummer,
+                    Email = anfrage.Email,
+                },
+                anfrage.PasswortBestätigen ?? ""
+            );
 
             if (!identityResultat.Succeeded)
             {
-                ModelState.AddModelStateFehlerListe(identityResultat.Errors.Select(x => x.Description).ToList());
+                ModelState.AddModelStateFehlerListe(
+                    identityResultat.Errors.Select(x => x.Description).ToList()
+                );
                 return View();
             }
-            var umtauschClaim = new Claim("AblaufDatumDesUmtauschs", DateTime.Now.AddDays(1).ToString());
+            var umtauschClaim = new Claim(
+                "AblaufDatumDesUmtauschs",
+                DateTime.Now.AddDays(1).ToString()
+            );
             var aktuallerBenutzer = await _userManager.FindByNameAsync(anfrage.BenutzerName!);
 
             var claimResultat = await _userManager.AddClaimAsync(aktuallerBenutzer!, umtauschClaim);
             if (!claimResultat.Succeeded)
             {
-                ModelState.AddModelStateFehlerListe(claimResultat.Errors.Select(x => x.Description).ToList());
+                ModelState.AddModelStateFehlerListe(
+                    claimResultat.Errors.Select(x => x.Description).ToList()
+                );
                 return View();
             }
             TempData["ErfolgsNachricht"] = "Der Mitgliedschaftsprozess war erfolgreich.";
             return RedirectToAction(nameof(HomeController.Anmelden));
-
-
         }
 
         public IActionResult Einloggen()
         {
-
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Einloggen(EinloggenAnsichtModell anfrage, string? returnUrl = null)
+        public async Task<IActionResult> Einloggen(
+            EinloggenAnsichtModell anfrage,
+            string? returnUrl = null
+        )
         {
             var validationResultat = await _validator.ValidateAsync(anfrage);
             if (!validationResultat.IsValid)
@@ -127,36 +144,40 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            var einloggenResultat = await _signInManager.PasswordSignInAsync(gibtsBenutzer, anfrage.Passwort!,
-                anfrage.ErrinnereMich, true);
+            var einloggenResultat = await _signInManager.PasswordSignInAsync(
+                gibtsBenutzer,
+                anfrage.Passwort!,
+                anfrage.ErrinnereMich,
+                true
+            );
 
             if (einloggenResultat.IsLockedOut)
             {
-                ModelState.AddModelStateFehlerListe(new List<string>()
-                    {
-                        "Sie können erst nach 3 Minuten eintreten."
-
-                    });
+                ModelState.AddModelStateFehlerListe(
+                    new List<string>() { "Sie können erst nach 3 Minuten eintreten." }
+                );
                 return View();
-
             }
 
             if (!einloggenResultat.Succeeded)
             {
-                ModelState.AddModelStateFehlerListe(new List<string>()
+                ModelState.AddModelStateFehlerListe(
+                    new List<string>()
                     {
                         "Email und Passwort stimmen nicht überein.",
-                        $"Anzahl der erfolglosen Einträge {await _userManager.GetAccessFailedCountAsync(gibtsBenutzer)}"
-                    });
+                        $"Anzahl der erfolglosen Einträge {await _userManager.GetAccessFailedCountAsync(gibtsBenutzer)}",
+                    }
+                );
                 return View();
             }
 
             if (gibtsBenutzer.Geburtsdatum.HasValue)
             {
-                await _signInManager.SignInWithClaimsAsync(gibtsBenutzer, anfrage.ErrinnereMich, new[]
-                {
-                        new Claim("Geburtsdatum",gibtsBenutzer.Geburtsdatum.Value.ToString())
-                });
+                await _signInManager.SignInWithClaimsAsync(
+                    gibtsBenutzer,
+                    anfrage.ErrinnereMich,
+                    new[] { new Claim("Geburtsdatum", gibtsBenutzer.Geburtsdatum.Value.ToString()) }
+                );
             }
             return Redirect(returnUrl!);
         }
@@ -178,20 +199,30 @@ namespace AspNetCoreIdentity.Web.Controllers
 
             if (gibtsBenutzer == null)
             {
-                ModelState.AddModelError(String.Empty, "Es wurde kein Benutzer mit dieser E-Mail-Adresse gefunden.");
+                ModelState.AddModelError(
+                    String.Empty,
+                    "Es wurde kein Benutzer mit dieser E-Mail-Adresse gefunden."
+                );
                 return View();
             }
 
-            string passwordZurücksetzenToken = await _userManager.GeneratePasswordResetTokenAsync(gibtsBenutzer);
-            var passwortZurücksetzenLink = Url.Action("PasswortZurücksetzen", "Home", new
-            {
-                userId = gibtsBenutzer.Id,
-                Token = passwordZurücksetzenToken,
-            }, HttpContext.Request.Scheme);
+            string passwordZurücksetzenToken = await _userManager.GeneratePasswordResetTokenAsync(
+                gibtsBenutzer
+            );
+            var passwortZurücksetzenLink = Url.Action(
+                "PasswortZurücksetzen",
+                "Home",
+                new { userId = gibtsBenutzer.Id, Token = passwordZurücksetzenToken },
+                HttpContext.Request.Scheme
+            );
 
-            await _emailDienst.SendeZurücksetzenPasswortEmail(passwortZurücksetzenLink, gibtsBenutzer.Email);
+            await _emailDienst.SendeZurücksetzenPasswortEmail(
+                passwortZurücksetzenLink,
+                gibtsBenutzer.Email
+            );
 
-            TempData["ErfolgsNachricht"] = "Der Link zur Erneuerung des Passworts wurde an Ihre E-Mail-Adresse gesendet.";
+            TempData["ErfolgsNachricht"] =
+                "Der Link zur Erneuerung des Passworts wurde an Ihre E-Mail-Adresse gesendet.";
             return RedirectToAction(nameof(PasswortVergessen));
         }
 
@@ -204,7 +235,9 @@ namespace AspNetCoreIdentity.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PasswortZurücksetzen(PasswortZurücksetzenAnsichtModell anfrage)
+        public async Task<IActionResult> PasswortZurücksetzen(
+            PasswortZurücksetzenAnsichtModell anfrage
+        )
         {
             var userId = TempData["userId"]?.ToString();
             var token = TempData["token"]?.ToString();
@@ -214,7 +247,6 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-
             var gibtsBenutzer = await _userManager.FindByIdAsync(userId);
 
             if (gibtsBenutzer == null || token == null || string.IsNullOrEmpty(anfrage.Passwort))
@@ -223,19 +255,30 @@ namespace AspNetCoreIdentity.Web.Controllers
                 return View();
             }
 
-            var resultat = await _userManager.ResetPasswordAsync(gibtsBenutzer, token, anfrage.Passwort);
+            var resultat = await _userManager.ResetPasswordAsync(
+                gibtsBenutzer,
+                token,
+                anfrage.Passwort
+            );
             if (resultat.Succeeded)
             {
                 TempData["ErfolgsNachricht"] = "Ihr Passwort wurde erfolgreich erneuert.";
             }
-            ModelState.AddModelStateFehlerListe(resultat.Errors.Select(x => x.Description).ToList());
+            ModelState.AddModelStateFehlerListe(
+                resultat.Errors.Select(x => x.Description).ToList()
+            );
             return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                }
+            );
         }
     }
 }

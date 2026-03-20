@@ -2,17 +2,21 @@
 {
     public class AnmeldenAnsichtModell
     {
-        public AnmeldenAnsichtModell()
-        {
-                
-        }
-        public AnmeldenAnsichtModell(string? benutzerName, string? email, string? telefonnummer, string? passwort)
+        public AnmeldenAnsichtModell() { }
+
+        public AnmeldenAnsichtModell(
+            string? benutzerName,
+            string? email,
+            string? telefonnummer,
+            string? passwort
+        )
         {
             BenutzerName = benutzerName;
             Email = email;
             Telefonnummer = telefonnummer;
             Passwort = passwort;
         }
+
         public string? BenutzerName { get; set; }
         public string? Email { get; set; }
         public string? Telefonnummer { get; set; }
